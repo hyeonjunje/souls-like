@@ -62,6 +62,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform _cameraRoot;
 
     // connect
+    private Player _player;
     private CharacterController _controller;
     private InputController _ic;
     private Animator _animator;
@@ -91,6 +92,10 @@ public class PlayerController : MonoBehaviour
     private float _fallTimer;
     private float _attackTimer;
 
+    // tweener
+    private Tweener _attackCoolTimeTweener;
+    private Tweener _moveSpeedTweener;
+
     // animation Hash
     private readonly int _hashMove = Animator.StringToHash("Speed");
     private readonly int _hashIsGround = Animator.StringToHash("IsGround");  
@@ -101,6 +106,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        _player = GetComponent<Player>();
         _controller = GetComponent<CharacterController>();
         _ic = GetComponent<InputController>();
         _animator = GetComponent<Animator>();
@@ -119,6 +125,9 @@ public class PlayerController : MonoBehaviour
             weaponR = tempWeaponR;
             weaponL = tempWeaponL;
         });
+
+        _moveSpeedTweener = DOTween.To(() => _currentSpeed, x => _currentSpeed = x, 0.0f, 0.0f).SetAutoKill(false).Pause();
+        _attackCoolTimeTweener = DOTween.To(() => _attackTimer, x => _attackTimer = x, 0.0f, attackCoolTime).SetAutoKill(false).Pause();
     }
 
     private void Update()
@@ -146,7 +155,7 @@ public class PlayerController : MonoBehaviour
             targetSpeed = _ic.sprint ? 6.0f : 3.0f;
             if (_isAct) targetSpeed = 0f;
 
-            DOTween.To(() => _currentSpeed, x => _currentSpeed = x, targetSpeed, 0.5f);
+            _moveSpeedTweener.ChangeEndValue(targetSpeed, 0.5f, true).Restart();
 
             _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
                 _cameraRoot.eulerAngles.y;
@@ -247,23 +256,11 @@ public class PlayerController : MonoBehaviour
         _isGround = Physics.CheckSphere(transform.position, groundRadius, groundLayers);
         _animator.SetBool(_hashIsGround, _isGround);
     }
-
-    private void OnDrawGizmosSelected()
-    {
-        Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
-        Color transparentRed = new Color(1.0f, 0.0f, 0.0f, 0.35f);
-
-        if (_isGround) Gizmos.color = transparentGreen;
-        else Gizmos.color = transparentRed;
-
-        // when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
-        Gizmos.DrawSphere(
-            new Vector3(transform.position.x, transform.position.y, transform.position.z),
-            groundRadius);
-    }
     #endregion
 
     #region Hand
+    private Coroutine _CoBlockStaminaDec;
+
     public void ActLeftHand(bool isLeftHand)
     {
         if(_isGround)
@@ -274,6 +271,16 @@ public class PlayerController : MonoBehaviour
             _isDefense = isLeftHand;
 
             _animator.SetBool(_hashBlocking, isLeftHand);
+
+            if(isLeftHand)
+            {
+                if (_CoBlockStaminaDec != null)
+                    StopCoroutine(_CoBlockStaminaDec);
+                _CoBlockStaminaDec = StartCoroutine(_player.CoEverDecresingStamina(-3f));
+            }
+            else
+                if (_CoBlockStaminaDec != null)
+                    StopCoroutine(_CoBlockStaminaDec);
         }
     }
 
@@ -286,7 +293,10 @@ public class PlayerController : MonoBehaviour
 
             _animator.SetTrigger(_hashIsAttack);
             weaponR?.Use();
-            DOTween.To(() => _attackTimer, x => _attackTimer = x, 0.0f, attackCoolTime);
+
+            _attackCoolTimeTweener.ChangeEndValue(0.0f, attackCoolTime, true).Restart();
+
+            _player.ChangeStamina(-5f);
         }
     }
 

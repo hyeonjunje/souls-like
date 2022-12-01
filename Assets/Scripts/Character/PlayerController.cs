@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 
 [RequireComponent(typeof(CharacterController), typeof(InputController), typeof(UnityEngine.InputSystem.PlayerInput))]
@@ -10,8 +11,46 @@ public class PlayerController : MonoBehaviour
     public float speed;
     public float lookSensitivity;
     public float jumpHeight = 1.2f;
+    [Tooltip("Jump coolTime. Useful when you keep jumping")]
     public float jumpCoolTime = 0.50f;
+    [Tooltip("Free fall coolTime. Useful when going down stairs")]
     public float fallCoolTime = 0.15f;
+    public float attackCoolTime = 1.0f;
+
+    private BaseWeapon _weaponR;
+    public BaseWeapon weaponR
+    {
+        get { return _weaponR; }
+        set
+        {
+            _weaponR = value;
+
+            if (_weaponR == null)
+                _weaponR = standardWeapon;
+
+            _weaponR?.Equip();
+            _animator.runtimeAnimatorController = _weaponR?.overrideController;
+        }
+    }
+
+    private BaseWeapon _weaponL;
+    public BaseWeapon weaponL
+    {
+        get { return _weaponL; }
+        set
+        {
+            _weaponL = value;
+
+            _weaponL?.Equip();
+        }
+    }
+
+    [Header("Temp")]
+    public BaseWeapon standardWeapon;
+    public BaseWeapon tempWeaponR;
+    public BaseWeapon tempWeaponL;
+    public Button equipButton;
+
 
     [Header("Layer")]
     public LayerMask groundLayers;
@@ -31,8 +70,13 @@ public class PlayerController : MonoBehaviour
     private float _currentSpeed = 0.0f;
     private float _targetRotation = 0.0f;
     private float _rotationVelocity;
-    private bool IsGround;
     private float _verticalVelocity;
+
+    // state
+    private bool _isGround;
+    private bool _isAttack => _attackTimer > 0;   // 공격중일 상태
+    private bool _isDefense;
+    private bool _isAct => _isAttack || _isDefense;             // 이동이 아닌 어떤 행동을 하고 있는 상태
 
     // gravity
     private float gravityValue = -9.81f * 2;
@@ -45,12 +89,15 @@ public class PlayerController : MonoBehaviour
     // CoolTime timer
     private float _jumpTimer;
     private float _fallTimer;
+    private float _attackTimer;
 
     // animation Hash
     private readonly int _hashMove = Animator.StringToHash("Speed");
     private readonly int _hashIsGround = Animator.StringToHash("IsGround");  
     private readonly int _hashJump = Animator.StringToHash("Jump");
     private readonly int _hashInAir = Animator.StringToHash("InAir");
+    private readonly int _hashIsAttack = Animator.StringToHash("IsAttack");
+    private readonly int _hashBlocking = Animator.StringToHash("Blocking");
 
     private void Awake()
     {
@@ -62,6 +109,16 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         _cinemachineTargetYaw = _cameraRoot.rotation.eulerAngles.y;
+
+        weaponR = null;
+        weaponL = null;
+
+        equipButton.onClick.AddListener(() =>
+        {
+            Debug.Log("장비합니다.");
+            weaponR = tempWeaponR;
+            weaponL = tempWeaponL;
+        });
     }
 
     private void Update()
@@ -76,6 +133,8 @@ public class PlayerController : MonoBehaviour
         CameraRotation();
     }
 
+    #region PlayerController
+
     private void Move()
     {
         float targetSpeed;
@@ -85,6 +144,8 @@ public class PlayerController : MonoBehaviour
         if(_ic.move != Vector2.zero)
         {
             targetSpeed = _ic.sprint ? 6.0f : 3.0f;
+            if (_isAct) targetSpeed = 0f;
+
             DOTween.To(() => _currentSpeed, x => _currentSpeed = x, targetSpeed, 0.5f);
 
             _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
@@ -135,10 +196,13 @@ public class PlayerController : MonoBehaviour
 
     private void JumpAndGravity()
     {
-        IsGround = Physics.CheckSphere(transform.position, groundRadius, groundLayers);
-        _animator.SetBool(_hashIsGround, IsGround);
+        if (_isAct)
+            return;
+
+        _isGround = Physics.CheckSphere(transform.position, groundRadius, groundLayers);
+        _animator.SetBool(_hashIsGround, _isGround);
         // 땅에 있을 때
-        if (IsGround)
+        if (_isGround)
         {
             _fallTimer = fallCoolTime;
 
@@ -180,8 +244,8 @@ public class PlayerController : MonoBehaviour
 
     private void GroundCheck()
     {
-        IsGround = Physics.CheckSphere(transform.position, groundRadius, groundLayers);
-        _animator.SetBool(_hashIsGround, IsGround);
+        _isGround = Physics.CheckSphere(transform.position, groundRadius, groundLayers);
+        _animator.SetBool(_hashIsGround, _isGround);
     }
 
     private void OnDrawGizmosSelected()
@@ -189,7 +253,7 @@ public class PlayerController : MonoBehaviour
         Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
         Color transparentRed = new Color(1.0f, 0.0f, 0.0f, 0.35f);
 
-        if (IsGround) Gizmos.color = transparentGreen;
+        if (_isGround) Gizmos.color = transparentGreen;
         else Gizmos.color = transparentRed;
 
         // when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
@@ -197,4 +261,36 @@ public class PlayerController : MonoBehaviour
             new Vector3(transform.position.x, transform.position.y, transform.position.z),
             groundRadius);
     }
+    #endregion
+
+    #region Hand
+    public void ActLeftHand(bool isLeftHand)
+    {
+        if(_isGround)
+        {
+            if (weaponL == null)
+                return;
+
+            _isDefense = isLeftHand;
+
+            _animator.SetBool(_hashBlocking, isLeftHand);
+        }
+    }
+
+    public void ActRightHand()
+    {
+        // Cant Attack while in the air 
+        if(_isGround && _attackTimer <= 0.0f)
+        {
+            _attackTimer = attackCoolTime;
+
+            _animator.SetTrigger(_hashIsAttack);
+            weaponR?.Use();
+            DOTween.To(() => _attackTimer, x => _attackTimer = x, 0.0f, attackCoolTime);
+        }
+    }
+
+
+
+    #endregion
 }

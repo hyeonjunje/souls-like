@@ -36,6 +36,22 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "LeftHand",
+                    "type": "PassThrough",
+                    "id": "0e584372-7b93-4d09-901f-580e8398721c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "RightHand",
+                    "type": "Button",
+                    "id": "6bf4f8dd-9a88-4055-893a-ed37e8cbaa6a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -124,6 +140,28 @@
                     "processors": "",
                     "groups": "PC",
                     "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "547a8026-20ec-400e-8e9b-5ab674499dbe",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "LeftHand",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0e556c31-c5df-4967-b48d-4ea2b64a4b06",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "RightHand",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

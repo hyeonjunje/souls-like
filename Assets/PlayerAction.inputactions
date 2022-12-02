@@ -52,6 +52,22 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Lock",
+                    "type": "Value",
+                    "id": "3d0f6eba-41bd-40b8-bae1-d392ca1f226c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Wheel",
+                    "type": "Value",
+                    "id": "f1b2d91d-a3af-4315-8764-d1a044423ec8",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -162,6 +178,28 @@
                     "processors": "",
                     "groups": "PC",
                     "action": "RightHand",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0c448234-e058-4a1f-b5ec-0d935dcb0452",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Lock",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d4c2745f-f961-491b-b1dc-bf23b7f56c91",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Wheel",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

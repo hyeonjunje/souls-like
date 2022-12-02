@@ -11,8 +11,37 @@ public class InputController : MonoBehaviour
     public bool jump;
     public bool sprint;
 
+    private float _wheelValue;
+    public float wheelValue
+    {
+        get { return _wheelValue; }
+        set
+        {
+            _wheelValue = value;
+
+            if (_wheelValue > 0)
+                pc.ChangeTarget(true);
+            else if(_wheelValue < 0)
+                pc.ChangeTarget(false);
+        }
+    }
+
+
+    private bool _isLockPressed;
+    public bool isLockPressed
+    {
+        get { return _isLockPressed; }
+        set
+        {
+            _isLockPressed = value;
+
+            if (_isLockPressed)
+                pc.LockOnOff();
+        }
+    }
+
     // Hold
-    public bool _isLeftHand;
+    private bool _isLeftHand;
     public bool isLeftHand
     {
         get { return _isLeftHand; }
@@ -47,6 +76,8 @@ public class InputController : MonoBehaviour
 
 
     private PlayerController pc;
+
+    private bool locking;
 
     private void Awake()
     {
@@ -88,5 +119,16 @@ public class InputController : MonoBehaviour
     void OnRightHand(InputValue value)
     {
         isRightHand = value.isPressed;
+    }
+
+
+    void OnLock(InputValue value)
+    {
+        isLockPressed = value.isPressed;
+    }
+
+    void OnWheel(InputValue value)
+    {
+        wheelValue = value.Get<float>();
     }
 }

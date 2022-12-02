@@ -112,14 +112,15 @@ namespace StarterAssets
 
         private bool IsCurrentDeviceMouse
         {
-            get
+            /*get
             {
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
-                return _playerInput.currentControlScheme == "KeyboardMouse";
+                //return _playerInput.currentControlScheme == "KeyboardMouse";
 #else
 				return false;
 #endif
-            }
+            }*/
+            get;set;
         }
 
 

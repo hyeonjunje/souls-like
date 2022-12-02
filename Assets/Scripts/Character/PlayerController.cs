@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.Linq;
 
 [RequireComponent(typeof(CharacterController), typeof(InputController), typeof(UnityEngine.InputSystem.PlayerInput))]
 public class PlayerController : MonoBehaviour
@@ -16,6 +17,8 @@ public class PlayerController : MonoBehaviour
     [Tooltip("Free fall coolTime. Useful when going down stairs")]
     public float fallCoolTime = 0.15f;
     public float attackCoolTime = 1.0f;
+    public float detectionRange = 20.0f;
+    public float viewAngle = 150.0f;
 
     private BaseWeapon _weaponR;
     public BaseWeapon weaponR
@@ -29,7 +32,6 @@ public class PlayerController : MonoBehaviour
                 _weaponR = standardWeapon;
 
             _weaponR?.Equip();
-            _animator.runtimeAnimatorController = _weaponR?.overrideController;
         }
     }
 
@@ -54,6 +56,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Layer")]
     public LayerMask groundLayers;
+    public LayerMask enemyLayers;
 
     [Tooltip("How fast the character turns to face movement direction")]
     [Range(0.0f, 0.3f)]
@@ -66,18 +69,28 @@ public class PlayerController : MonoBehaviour
     private CharacterController _controller;
     private InputController _ic;
     private Animator _animator;
+    private FieldOfView _fov;
 
     // player
     private float _currentSpeed = 0.0f;
     private float _targetRotation = 0.0f;
     private float _rotationVelocity;
     private float _verticalVelocity;
+    private float _currentMoveX;
+    private float _currentMoveY;
+
+    // object
+    private List<Transform> _objects => _fov.visibleTargets;
+    private Transform _closedTarget = null;
+    private Transform _currentTarget = null;
 
     // state
     private bool _isGround;
     private bool _isAttack => _attackTimer > 0;   // 공격중일 상태
     private bool _isDefense;
     private bool _isAct => _isAttack || _isDefense;             // 이동이 아닌 어떤 행동을 하고 있는 상태
+    private bool _isTarget => _currentTarget != null;
+    private bool _isLock = false;                           // 록온 인 상태
 
     // gravity
     private float gravityValue = -9.81f * 2;
@@ -92,9 +105,15 @@ public class PlayerController : MonoBehaviour
     private float _fallTimer;
     private float _attackTimer;
 
+    // coroutine
+    private Coroutine _coFOVRoutine;
+
     // tweener
     private Tweener _attackCoolTimeTweener;
     private Tweener _moveSpeedTweener;
+    private Tweener _moveXTweener;
+    private Tweener _moveYTweener;
+    private Tweener _lockRotationTweener;
 
     // animation Hash
     private readonly int _hashMove = Animator.StringToHash("Speed");
@@ -103,6 +122,9 @@ public class PlayerController : MonoBehaviour
     private readonly int _hashInAir = Animator.StringToHash("InAir");
     private readonly int _hashIsAttack = Animator.StringToHash("IsAttack");
     private readonly int _hashBlocking = Animator.StringToHash("Blocking");
+    private readonly int _hashVelocityX = Animator.StringToHash("VelocityX");
+    private readonly int _hashVelocityY = Animator.StringToHash("VelocityY");
+    private readonly int _hashIsTarget = Animator.StringToHash("isTarget");
 
     private void Awake()
     {
@@ -110,6 +132,7 @@ public class PlayerController : MonoBehaviour
         _controller = GetComponent<CharacterController>();
         _ic = GetComponent<InputController>();
         _animator = GetComponent<Animator>();
+        _fov = _cameraRoot.GetComponent<FieldOfView>();
     }
 
     private void Start()
@@ -128,6 +151,9 @@ public class PlayerController : MonoBehaviour
 
         _moveSpeedTweener = DOTween.To(() => _currentSpeed, x => _currentSpeed = x, 0.0f, 0.0f).SetAutoKill(false).Pause();
         _attackCoolTimeTweener = DOTween.To(() => _attackTimer, x => _attackTimer = x, 0.0f, attackCoolTime).SetAutoKill(false).Pause();
+        _moveXTweener = DOTween.To(() => _currentMoveX, x => _currentMoveX = x, 0.0f, 0.0f).SetAutoKill(false).Pause();
+        _moveYTweener = DOTween.To(() => _currentMoveY, x => _currentMoveY = x, 0.0f, 0.0f).SetAutoKill(false).Pause();
+        _lockRotationTweener = transform.DORotate(Vector3.zero, 0.5f).SetAutoKill(false).Pause();
     }
 
     private void Update()
@@ -163,7 +189,10 @@ public class PlayerController : MonoBehaviour
             float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
                 rotationSmoothTime);
 
-            transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+            if(_isTarget)
+                transform.LookAt(new Vector3(_currentTarget.position.x, 0f, _currentTarget.position.z));
+            else
+                transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
         }
         else
         {
@@ -171,18 +200,41 @@ public class PlayerController : MonoBehaviour
             if (_currentSpeed < 0.01f)
                 _currentSpeed = 0;
             else
-                DOTween.To(() => _currentSpeed, x => _currentSpeed = x, targetSpeed, 0.5f);
+                _moveSpeedTweener.ChangeEndValue(targetSpeed, 0.5f, true).Restart();
         }
 
 
         Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
         _controller.Move(targetDirection.normalized * (_currentSpeed * Time.deltaTime) + Vector3.up * _verticalVelocity * Time.deltaTime);
 
-        _animator.SetFloat(_hashMove, _currentSpeed);
+        if (_isTarget)
+        {
+            _moveXTweener.ChangeEndValue(_ic.move.x, 0.5f, true).Restart();
+            _moveYTweener.ChangeEndValue(_ic.move.y, 0.5f, true).Restart();
+
+            _animator.SetFloat(_hashVelocityX, _currentMoveX * _currentSpeed / 6f);
+            _animator.SetFloat(_hashVelocityY, _currentMoveY * _currentSpeed / 6f);
+        }
+        else
+        {
+            _animator.SetFloat(_hashMove, _currentSpeed);
+        }
+
+        if(_isLock && _currentTarget != null && Vector3.Distance(_cameraRoot.position, _currentTarget.position) > _fov.viewRaduis)
+        {
+            LockOnOff();
+        }
     }
 
     private void CameraRotation()
     {
+        if (_isTarget)
+        {
+            _cameraRoot.LookAt(new Vector3(_currentTarget.position.x, 0f, _currentTarget.position.z));
+            return;
+        }
+            
+
         if(_ic.look.magnitude > 0.01f)
         {
             _cinemachineTargetYaw += _ic.look.x * lookSensitivity * Time.deltaTime;
@@ -302,5 +354,63 @@ public class PlayerController : MonoBehaviour
 
 
 
+    #endregion
+
+    #region Target
+    public void SetTarget(Transform target = null)
+    {
+        _currentTarget = target;
+        _animator.SetBool(_hashIsTarget, _isTarget);
+        if(target != null)
+        {
+            transform.LookAt(new Vector3(_currentTarget.position.x, 0f, _currentTarget.position.z));
+        }
+    }
+
+    public void LockOnOff()
+    {
+        // enter lock state
+        if (!_isLock)
+        {
+            _closedTarget = _fov.closedVisibleTarget;
+
+            _currentTarget = _closedTarget;
+            SetTarget(_currentTarget);
+            _isLock = true;
+        }
+        // enter unlock state
+        else
+        {
+            _closedTarget = null;
+
+            _currentTarget = null;
+            SetTarget(_currentTarget);
+            _isLock = false;
+        }
+    }
+
+
+    public void ChangeTarget(bool flag)
+    {
+        if(_isLock)
+        {
+            _objects.OrderBy(x => Vector3.Distance(transform.position, x.position));
+
+            int index = _objects.IndexOf(_closedTarget);
+            if (index == -1 && _objects.Count == 1)
+                return;
+
+            if (flag)
+                index = (index + 1 == _objects.Count ? 0 : index + 1);
+            else
+                index = (index - 1 == -1 ? _objects.Count - 1 : index - 1);
+
+            _closedTarget = _objects[index];
+
+            _currentTarget = _closedTarget;
+
+            SetTarget(_currentTarget);
+        }
+    }
     #endregion
 }

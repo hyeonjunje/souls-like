@@ -7,7 +7,6 @@ public abstract class BaseWeapon : MonoBehaviour
     [Header("Weapon Info")]
     public Define.EWeaponType weaponType;
     public Define.EEquipParts equipParts;
-    public AnimatorOverrideController overrideController;
     public int maxOp, minOp;
 
 

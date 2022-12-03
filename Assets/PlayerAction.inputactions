@@ -39,15 +39,15 @@
                 },
                 {
                     "name": "LeftHand",
-                    "type": "PassThrough",
+                    "type": "Value",
                     "id": "0e584372-7b93-4d09-901f-580e8398721c",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
                 },
                 {
                     "name": "RightHand",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "6bf4f8dd-9a88-4055-893a-ed37e8cbaa6a",
                     "expectedControlType": "Button",
                     "processors": "",
@@ -66,6 +66,22 @@
                     "type": "Value",
                     "id": "f1b2d91d-a3af-4315-8764-d1a044423ec8",
                     "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Num1",
+                    "type": "Value",
+                    "id": "75a8af31-d37c-42f5-b8a0-533982096262",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Num2",
+                    "type": "Value",
+                    "id": "72d09c91-e34f-43c5-b7a3-891cbfef1eb2",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
                 }
@@ -151,7 +167,7 @@
                 {
                     "name": "",
                     "id": "1a57ef0d-bdf4-4ff0-9dd3-637d1e4f8a02",
-                    "path": "<Keyboard>/f",
+                    "path": "<Keyboard>/g",
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
@@ -200,6 +216,28 @@
                     "processors": "",
                     "groups": "PC",
                     "action": "Wheel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "df29da3f-095c-4ce3-bc13-0a7c67e739ab",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Num2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cbcdc950-69e9-414a-991c-884856ea4e00",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Num1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

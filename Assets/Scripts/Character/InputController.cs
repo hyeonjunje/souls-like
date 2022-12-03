@@ -52,6 +52,7 @@ public class InputController : MonoBehaviour
             pc.ActLeftHand(_isLeftHand);
         }
     }
+
     // Press
     private bool _isRightHand;
     public bool isRightHand
@@ -64,20 +65,12 @@ public class InputController : MonoBehaviour
             if (_isRightHand)
             {
                 pc.ActRightHand();
-                _isRightHand = false;
             }
         }
     }
-
-
-    [Header("Mouse Cursor Settings")]
-    public bool cursorLocked = true;
-    public bool cursorInputForLook = true;
-
-
+    
     private PlayerController pc;
 
-    private bool locking;
 
     private void Awake()
     {
@@ -113,6 +106,7 @@ public class InputController : MonoBehaviour
     void OnLeftHand(InputValue value)
     {
         isLeftHand = value.isPressed;
+        Debug.Log(isLeftHand);
     }
 
 
@@ -130,5 +124,17 @@ public class InputController : MonoBehaviour
     void OnWheel(InputValue value)
     {
         wheelValue = value.Get<float>();
+    }
+
+    void OnNum1(InputValue value)
+    {
+        if (value.isPressed)
+            pc.ChangeWeapon(1);
+    }
+
+    void OnNum2(InputValue value)
+    {
+        if (value.isPressed)
+            pc.ChangeWeapon(2);
     }
 }

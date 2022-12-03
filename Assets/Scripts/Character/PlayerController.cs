@@ -19,40 +19,31 @@ public class PlayerController : MonoBehaviour
     public float attackCoolTime = 1.0f;
     public float detectionRange = 20.0f;
     public float viewAngle = 150.0f;
+    public float comboResetCoolTime = 3.0f;
 
-    private BaseWeapon _weaponR;
-    public BaseWeapon weaponR
+    public BaseWeapon[] weaponSlots;
+
+    private BaseWeapon _weapon;
+    public BaseWeapon weapon
     {
-        get { return _weaponR; }
+        get { return _weapon; }
         set
         {
-            _weaponR = value;
+            _weapon = value;
 
-            if (_weaponR == null)
-                _weaponR = standardWeapon;
+            if (_weapon == null)
+                _weapon = standardWeapon;
 
-            _weaponR?.Equip();
-        }
-    }
+            _weapon.Equip();
+            _maxCombo = _weapon.maxCombo;
+            _currentCombo = 0;
 
-    private BaseWeapon _weaponL;
-    public BaseWeapon weaponL
-    {
-        get { return _weaponL; }
-        set
-        {
-            _weaponL = value;
-
-            _weaponL?.Equip();
+            _animator.SetInteger(_hashEquipWeapon, (int)_weapon.weaponType);
         }
     }
 
     [Header("Temp")]
     public BaseWeapon standardWeapon;
-    public BaseWeapon tempWeaponR;
-    public BaseWeapon tempWeaponL;
-    public Button equipButton;
-
 
     [Header("Layer")]
     public LayerMask groundLayers;
@@ -76,8 +67,9 @@ public class PlayerController : MonoBehaviour
     private float _targetRotation = 0.0f;
     private float _rotationVelocity;
     private float _verticalVelocity;
-    private float _currentMoveX;
-    private float _currentMoveY;
+    private Vector2 _currentMove;
+    private int _maxCombo = 0;
+    private int _currentCombo = 0;
 
     // object
     private List<Transform> _objects => _fov.visibleTargets;
@@ -104,16 +96,14 @@ public class PlayerController : MonoBehaviour
     private float _jumpTimer;
     private float _fallTimer;
     private float _attackTimer;
+    public float _comboResetTimer;
 
-    // coroutine
-    private Coroutine _coFOVRoutine;
 
     // tweener
     private Tweener _attackCoolTimeTweener;
+    private Tweener _comboResetTimeTweener;
     private Tweener _moveSpeedTweener;
-    private Tweener _moveXTweener;
-    private Tweener _moveYTweener;
-    private Tweener _lockRotationTweener;
+    private Tweener _moveTweener;
 
     // animation Hash
     private readonly int _hashMove = Animator.StringToHash("Speed");
@@ -125,6 +115,8 @@ public class PlayerController : MonoBehaviour
     private readonly int _hashVelocityX = Animator.StringToHash("VelocityX");
     private readonly int _hashVelocityY = Animator.StringToHash("VelocityY");
     private readonly int _hashIsTarget = Animator.StringToHash("isTarget");
+    private readonly int _hashCombo = Animator.StringToHash("Combo");
+    private readonly int _hashEquipWeapon = Animator.StringToHash("EquipWeapon");
 
     private void Awake()
     {
@@ -139,21 +131,13 @@ public class PlayerController : MonoBehaviour
     {
         _cinemachineTargetYaw = _cameraRoot.rotation.eulerAngles.y;
 
-        weaponR = null;
-        weaponL = null;
-
-        equipButton.onClick.AddListener(() =>
-        {
-            Debug.Log("장비합니다.");
-            weaponR = tempWeaponR;
-            weaponL = tempWeaponL;
-        });
+        weapon = null;
 
         _moveSpeedTweener = DOTween.To(() => _currentSpeed, x => _currentSpeed = x, 0.0f, 0.0f).SetAutoKill(false).Pause();
         _attackCoolTimeTweener = DOTween.To(() => _attackTimer, x => _attackTimer = x, 0.0f, attackCoolTime).SetAutoKill(false).Pause();
-        _moveXTweener = DOTween.To(() => _currentMoveX, x => _currentMoveX = x, 0.0f, 0.0f).SetAutoKill(false).Pause();
-        _moveYTweener = DOTween.To(() => _currentMoveY, x => _currentMoveY = x, 0.0f, 0.0f).SetAutoKill(false).Pause();
-        _lockRotationTweener = transform.DORotate(Vector3.zero, 0.5f).SetAutoKill(false).Pause();
+        _moveTweener = DOTween.To(() => _currentMove, x => _currentMove = x, Vector2.zero, 0.0f).SetAutoKill(false).Pause();
+        _comboResetTimeTweener = DOTween.To(() => _comboResetTimer, x => _comboResetTimer = x, 0.0f, 0.0f).SetAutoKill(false).Pause()
+            .OnComplete(() => _currentCombo = 0);
     }
 
     private void Update()
@@ -176,12 +160,10 @@ public class PlayerController : MonoBehaviour
 
         Vector3 inputDirection = new Vector3(_ic.move.x, 0f, _ic.move.y).normalized;
 
-        if(_ic.move != Vector2.zero)
+        if (_ic.move != Vector2.zero)
         {
             targetSpeed = _ic.sprint ? 6.0f : 3.0f;
             if (_isAct) targetSpeed = 0f;
-
-            _moveSpeedTweener.ChangeEndValue(targetSpeed, 0.5f, true).Restart();
 
             _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
                 _cameraRoot.eulerAngles.y;
@@ -190,30 +172,25 @@ public class PlayerController : MonoBehaviour
                 rotationSmoothTime);
 
             if(_isTarget)
-                transform.LookAt(new Vector3(_currentTarget.position.x, 0f, _currentTarget.position.z));
+                transform.rotation = Quaternion.Euler(0.0f, _cameraRoot.eulerAngles.y, 0.0f);
             else
                 transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
         }
         else
         {
             targetSpeed = 0.0f;
-            if (_currentSpeed < 0.01f)
-                _currentSpeed = 0;
-            else
-                _moveSpeedTweener.ChangeEndValue(targetSpeed, 0.5f, true).Restart();
         }
-
+        _moveSpeedTweener.ChangeEndValue(targetSpeed, 0.5f, true).Restart();
 
         Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
         _controller.Move(targetDirection.normalized * (_currentSpeed * Time.deltaTime) + Vector3.up * _verticalVelocity * Time.deltaTime);
 
         if (_isTarget)
         {
-            _moveXTweener.ChangeEndValue(_ic.move.x, 0.5f, true).Restart();
-            _moveYTweener.ChangeEndValue(_ic.move.y, 0.5f, true).Restart();
+            _moveTweener.ChangeEndValue(new Vector2(_ic.move.x, _ic.move.y), 0.5f, true).Restart();
 
-            _animator.SetFloat(_hashVelocityX, _currentMoveX * _currentSpeed / 6f);
-            _animator.SetFloat(_hashVelocityY, _currentMoveY * _currentSpeed / 6f);
+            _animator.SetFloat(_hashVelocityX, _currentMove.x * _currentSpeed / 6f);
+            _animator.SetFloat(_hashVelocityY, _currentMove.y * _currentSpeed / 6f);
         }
         else
         {
@@ -230,7 +207,7 @@ public class PlayerController : MonoBehaviour
     {
         if (_isTarget)
         {
-            _cameraRoot.LookAt(new Vector3(_currentTarget.position.x, 0f, _currentTarget.position.z));
+            _cameraRoot.LookAt(new Vector3(_currentTarget.position.x, _currentTarget.position.y, _currentTarget.position.z));
             return;
         }
             
@@ -257,8 +234,8 @@ public class PlayerController : MonoBehaviour
 
     private void JumpAndGravity()
     {
-        if (_isAct)
-            return;
+        /*if (_isAct)
+            return;*/
 
         _isGround = Physics.CheckSphere(transform.position, groundRadius, groundLayers);
         _animator.SetBool(_hashIsGround, _isGround);
@@ -313,16 +290,19 @@ public class PlayerController : MonoBehaviour
     #region Hand
     private Coroutine _CoBlockStaminaDec;
 
+    public void ChangeWeapon(int slot)
+    {
+        if(weaponSlots.Length > slot && weaponSlots[slot] != null && weapon != weaponSlots[slot])
+        {
+            weapon = weaponSlots[slot];
+        }
+    }
+
     public void ActLeftHand(bool isLeftHand)
     {
-        if(_isGround)
+        if(_isGround || weapon.weaponType != Define.EWeaponType.None)
         {
-            if (weaponL == null)
-                return;
-
             _isDefense = isLeftHand;
-
-            _animator.SetBool(_hashBlocking, isLeftHand);
 
             if(isLeftHand)
             {
@@ -331,8 +311,12 @@ public class PlayerController : MonoBehaviour
                 _CoBlockStaminaDec = StartCoroutine(_player.CoEverDecresingStamina(-3f));
             }
             else
+            {
                 if (_CoBlockStaminaDec != null)
                     StopCoroutine(_CoBlockStaminaDec);
+            }
+
+            _animator.SetBool(_hashBlocking, isLeftHand);
         }
     }
 
@@ -342,11 +326,16 @@ public class PlayerController : MonoBehaviour
         if(_isGround && _attackTimer <= 0.0f)
         {
             _attackTimer = attackCoolTime;
+            _comboResetTimer = comboResetCoolTime;
 
             _animator.SetTrigger(_hashIsAttack);
-            weaponR?.Use();
+            _animator.SetInteger(_hashCombo, _currentCombo++);
+            _currentCombo = _currentCombo == _maxCombo ? 0 : _currentCombo;
 
-            _attackCoolTimeTweener.ChangeEndValue(0.0f, attackCoolTime, true).Restart();
+            weapon?.Use();
+
+            _attackCoolTimeTweener.ChangeEndValue(0.0f, attackCoolTime, true).Restart();  // attack Cool Time Tweener
+            _comboResetTimeTweener.ChangeEndValue(0.0f, comboResetCoolTime, true).Restart();   // combo Reset Cool Time Tweener
 
             _player.ChangeStamina(-5f);
         }

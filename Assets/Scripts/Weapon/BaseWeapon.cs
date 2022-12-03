@@ -8,7 +8,7 @@ public abstract class BaseWeapon : MonoBehaviour
     public Define.EWeaponType weaponType;
     public Define.EEquipParts equipParts;
     public int maxOp, minOp;
-
+    public int maxCombo;
 
     public abstract void Use();
 

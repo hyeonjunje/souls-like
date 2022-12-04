@@ -115,6 +115,7 @@ public class PlayerController : MonoBehaviour
     private Tweener _comboResetTimeTweener;
     private Tweener _moveSpeedTweener;
     private Tweener _moveTweener;
+    private Tweener _targetAimTweener;
 
     // animation Hash
     private readonly int _hashMove = Animator.StringToHash("Speed");
@@ -150,6 +151,8 @@ public class PlayerController : MonoBehaviour
         _moveTweener = DOTween.To(() => _currentMove, x => _currentMove = x, Vector2.zero, 0.0f).SetAutoKill(false).Pause();
         _comboResetTimeTweener = DOTween.To(() => _comboResetTimer, x => _comboResetTimer = x, 0.0f, 0.0f).SetAutoKill(false).Pause()
             .OnComplete(() => _currentCombo = 0);
+        _targetAimTweener = _cameraRoot.DOLookAt(Vector3.zero, 0.0f).SetAutoKill(false).Pause();
+            //DOTween.To(() => _cameraRoot.rotation, x => _cameraRoot.rotation = x, Quaternion.identity, 0.0f).SetAutoKill(false).Pause();
     }
 
     private void Update()
@@ -183,16 +186,18 @@ public class PlayerController : MonoBehaviour
             float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
                 rotationSmoothTime);
 
-            if(_isTarget)
-                transform.rotation = Quaternion.Euler(0.0f, _cameraRoot.eulerAngles.y, 0.0f);
-            else
+            if(!_isTarget)
                 transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
         }
         else
         {
             targetSpeed = 0.0f;
         }
-        _moveSpeedTweener.ChangeEndValue(targetSpeed, 0.5f, true).Restart();
+
+        if(_isTarget)
+            transform.rotation = Quaternion.Euler(0.0f, _cameraRoot.eulerAngles.y, 0.0f);
+
+            _moveSpeedTweener.ChangeEndValue(targetSpeed, 0.5f, true).Restart();
 
         Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
         _controller.Move(targetDirection.normalized * (_currentSpeed * Time.deltaTime) + Vector3.up * _verticalVelocity * Time.deltaTime);
@@ -219,7 +224,12 @@ public class PlayerController : MonoBehaviour
     {
         if (_isTarget)
         {
-            _cameraRoot.LookAt(new Vector3(_currentTarget.position.x, _currentTarget.position.y, _currentTarget.position.z));
+            Quaternion targetRotation = Quaternion.LookRotation(_currentTarget.position - _cameraRoot.position);
+            _targetAimTweener.ChangeEndValue(_currentTarget.position, 0.5f, true).Restart();
+
+            //_cameraRoot.LookAt(new Vector3(_currentTarget.position.x, _currentTarget.position.y, _currentTarget.position.z));
+            _cinemachineTargetPitch = _cameraRoot.eulerAngles.x;
+            _cinemachineTargetYaw = _cameraRoot.eulerAngles.y;
             return;
         }
             
@@ -358,14 +368,11 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Target
+
     public void SetTarget(Transform target = null)
     {
         _currentTarget = target;
         _animator.SetBool(_hashIsTarget, _isTarget);
-        if(target != null)
-        {
-            transform.LookAt(new Vector3(_currentTarget.position.x, 0f, _currentTarget.position.z));
-        }
     }
 
     public void LockOnOff()
@@ -375,17 +382,13 @@ public class PlayerController : MonoBehaviour
         {
             _closedTarget = _fov.closedVisibleTarget;
 
-            _currentTarget = _closedTarget;
-            SetTarget(_currentTarget);
+            SetTarget(_closedTarget);
             _isLock = true;
         }
         // enter unlock state
         else
         {
-            _closedTarget = null;
-
-            _currentTarget = null;
-            SetTarget(_currentTarget);
+            SetTarget(null);
             _isLock = false;
         }
     }
@@ -408,9 +411,7 @@ public class PlayerController : MonoBehaviour
 
             _closedTarget = _objects[index];
 
-            _currentTarget = _closedTarget;
-
-            SetTarget(_currentTarget);
+            SetTarget(_closedTarget);
         }
     }
     #endregion

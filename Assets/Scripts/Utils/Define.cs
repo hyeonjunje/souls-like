@@ -16,6 +16,13 @@ public static class Define
         None,
         Right,
         Left,
-        Both,
+    }
+
+    public enum EHoldParts
+    {
+        None,
+        WaistR,
+        WaistL,
+        Back,
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using System.Linq;
 
+
 [RequireComponent(typeof(CharacterController), typeof(InputController), typeof(UnityEngine.InputSystem.PlayerInput))]
 public class PlayerController : MonoBehaviour
 {
@@ -29,12 +30,21 @@ public class PlayerController : MonoBehaviour
         get { return _weapon; }
         set
         {
+            BaseWeapon prevWeapon = _weapon;
+
             _weapon = value;
 
             if (_weapon == null)
                 _weapon = standardWeapon;
 
             _weapon.Equip();
+
+            // parent
+            if (prevWeapon != null)
+                _weaponHolder.HoldWeapon(prevWeapon);
+            _weaponHolder.EquipWeapon(_weapon);
+
+            // setting combo
             _maxCombo = _weapon.maxCombo;
             _currentCombo = 0;
 
@@ -61,6 +71,7 @@ public class PlayerController : MonoBehaviour
     private InputController _ic;
     private Animator _animator;
     private FieldOfView _fov;
+    private WeaponHolder _weaponHolder;
 
     // player
     private float _currentSpeed = 0.0f;
@@ -125,6 +136,7 @@ public class PlayerController : MonoBehaviour
         _ic = GetComponent<InputController>();
         _animator = GetComponent<Animator>();
         _fov = _cameraRoot.GetComponent<FieldOfView>();
+        _weaponHolder = GetComponent<WeaponHolder>();
     }
 
     private void Start()
@@ -329,8 +341,8 @@ public class PlayerController : MonoBehaviour
             _comboResetTimer = comboResetCoolTime;
 
             _animator.SetTrigger(_hashIsAttack);
-            _animator.SetInteger(_hashCombo, _currentCombo++);
-            _currentCombo = _currentCombo == _maxCombo ? 0 : _currentCombo;
+            _animator.SetInteger(_hashCombo, _currentCombo);
+            _currentCombo = _currentCombo + 1 == _maxCombo ? 0 : _currentCombo + 1;
 
             weapon?.Use();
 

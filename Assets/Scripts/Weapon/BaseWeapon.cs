@@ -7,8 +7,11 @@ public abstract class BaseWeapon : MonoBehaviour
     [Header("Weapon Info")]
     public Define.EWeaponType weaponType;
     public Define.EEquipParts equipParts;
+    public Define.EHoldParts holdParts;
     public int maxOp, minOp;
     public int maxCombo;
+    public Vector3 offsetPos;
+    public Vector3 offsetRot;
 
     public abstract void Use();
 

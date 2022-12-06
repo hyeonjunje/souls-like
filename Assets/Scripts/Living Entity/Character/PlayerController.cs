@@ -371,8 +371,12 @@ public class PlayerController : MonoBehaviour
 
     public void SetTarget(Transform target = null)
     {
+        _currentTarget?.GetComponent<TargetMark>().SetTargetActive(false);
+
         _currentTarget = target;
         _animator.SetBool(_hashIsTarget, _isTarget);
+
+        _currentTarget?.GetComponent<TargetMark>().SetTargetActive(true);
     }
 
     public void LockOnOff()

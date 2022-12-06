@@ -11,6 +11,10 @@ public class FieldOfViewEditor : Editor
     {
         FieldOfView fov = (FieldOfView)target;
         Handles.color = Color.red;
+
+        if (fov.offsetTransform == null)
+            fov.offsetTransform = fov.transform;
+
         Handles.DrawWireArc(fov.offsetTransform.position, Vector3.up, Vector3.forward, 360, fov.viewRaduis);
 
         Vector3 viewAngleA = fov.DirFromAngle(-fov.viewAngle / 2, false);

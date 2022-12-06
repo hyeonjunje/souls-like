@@ -19,6 +19,8 @@ public class FieldOfView : MonoBehaviour
 
     public Transform offsetTransform;
 
+    public SpriteRenderer targetSprite;
+
     private void Start()
     {
         StartCoroutine(FindTargetsWithDelay(0.2f));
@@ -38,6 +40,9 @@ public class FieldOfView : MonoBehaviour
     {
         visibleTargets.Clear();
         closedVisibleTarget = null;
+
+        if (offsetTransform == null)
+            offsetTransform = transform;
 
         Collider[] targetsInViewRadius = Physics.OverlapSphere(offsetTransform.position, viewRaduis, enemyLayer);
 

@@ -26,9 +26,4 @@ public class WeaponHolder : MonoBehaviour
         weapon.transform.localPosition = Vector3.zero + weapon.offsetPos;
         weapon.transform.localEulerAngles = Vector3.zero + weapon.offsetRot;
     }
-
-    private void Update()
-    {
-        Debug.Log(equipParts[1].localEulerAngles);
-    }
 }

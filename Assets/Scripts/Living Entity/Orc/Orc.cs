@@ -4,14 +4,20 @@ using UnityEngine;
 
 public class Orc : Enemy
 {
-    // Start is called before the first frame update
-    void Start()
-    {
+    private OrcController _oc;
 
-    }
-    // Update is called once per frame
-    void Update()
+    protected override void Start()
     {
-        
+        base.Start();
+
+        _oc = GetComponent<OrcController>();
     }
+
+    #region animation event
+    public override void EnableHitBox(int active)
+    {
+        bool flag = active == 1 ? true : false;
+        _oc.weapon.EnableHitBox(flag);
+    }
+    #endregion
 }

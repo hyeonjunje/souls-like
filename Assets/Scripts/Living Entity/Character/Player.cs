@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 
 [RequireComponent(typeof(PlayerController))]
-public class Player : MonoBehaviour
+public class Player : LivingEntity
 {
     [Header("Player Info")]
     public float maxHp;
@@ -47,10 +47,17 @@ public class Player : MonoBehaviour
         }
     }
 
+    // connect
+    private PlayerController _pc;
+
     private float _staminaRecoveryTimer;
     private Tweener _staimaCoolTimeTweener;
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
+        _pc = GetComponent<PlayerController>();
+
         currentHp = maxHp;
         currentStamina = maxStamina;
 
@@ -101,4 +108,21 @@ public class Player : MonoBehaviour
             ChangeStamina(recoveryStaminaAmount * Time.deltaTime);
         }
     }
+
+    #region override
+    public override void Hitted(float damage)
+    {
+        base.Hitted(damage);
+
+        ChangeHp(-damage);
+    }
+    #endregion
+
+    #region animation event
+    public override void EnableHitBox(int active)
+    {
+        bool flag = active == 1 ? true : false;
+        _pc.weapon.EnableHitBox(flag);
+    }
+    #endregion
 }

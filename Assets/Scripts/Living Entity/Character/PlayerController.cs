@@ -352,9 +352,10 @@ public class PlayerController : MonoBehaviour
 
             _animator.SetTrigger(_hashIsAttack);
             _animator.SetInteger(_hashCombo, _currentCombo);
-            _currentCombo = _currentCombo + 1 == _maxCombo ? 0 : _currentCombo + 1;
 
-            weapon?.Use();
+            weapon?.Use(_currentCombo, 10);
+
+            _currentCombo = _currentCombo + 1 == _maxCombo ? 0 : _currentCombo + 1;
 
             _attackCoolTimeTweener.ChangeEndValue(0.0f, attackCoolTime, true).Restart();  // attack Cool Time Tweener
             _comboResetTimeTweener.ChangeEndValue(0.0f, comboResetCoolTime, true).Restart();   // combo Reset Cool Time Tweener

@@ -15,8 +15,9 @@ public class Hand : BaseWeapon
 
     }
 
-    public override void Use()
-    {
 
+    public override void Use(int currentCombo, float op)
+    {
+        hitbox.currentDamage = op * skillDatas[currentCombo].rate;
     }
 }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TwoHanded : BaseWeapon
 {
+    
+
     public override void Equip()
     {
 
@@ -14,8 +16,8 @@ public class TwoHanded : BaseWeapon
 
     }
 
-    public override void Use()
+    public override void Use(int currentCombo, float op)
     {
-
+        hitbox.currentDamage = op * skillDatas[currentCombo].rate;
     }
 }

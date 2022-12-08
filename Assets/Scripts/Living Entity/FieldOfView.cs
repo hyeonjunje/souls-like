@@ -11,7 +11,7 @@ public class FieldOfView : MonoBehaviour
     public LayerMask enemyLayer;
     public LayerMask blockLayer;
 
-    [HideInInspector]
+    //[HideInInspector]
     public List<Transform> visibleTargets = new List<Transform>();
 
     [HideInInspector]
@@ -49,6 +49,9 @@ public class FieldOfView : MonoBehaviour
         for(int i = 0; i < targetsInViewRadius.Length; i++)
         {
             Transform target = targetsInViewRadius[i].transform;
+            if (target.tag != "Target")
+                continue;
+
             Vector3 dirToTarget = GetDirToTarget(target);
             if(Vector3.Angle(offsetTransform.forward, dirToTarget) < viewAngle / 2)
             {

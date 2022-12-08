@@ -91,6 +91,7 @@ public class PlayerController : MonoBehaviour
     private bool _isGround;
     private bool _isAttack => _attackTimer > 0;   // 공격중일 상태
     private bool _isDefense;
+    public bool isDefense => _isDefense;
     private bool _isAct => _isAttack || _isDefense;             // 이동이 아닌 어떤 행동을 하고 있는 상태
     private bool _isTarget => _currentTarget != null;
     private bool _isLock = false;                           // 록온 인 상태
@@ -322,11 +323,14 @@ public class PlayerController : MonoBehaviour
 
     public void ActLeftHand(bool isLeftHand)
     {
+        if (_player.currentStamina < 0)
+            return;
+
         if(_isGround || weapon.weaponType != Define.EWeaponType.None)
         {
             _isDefense = isLeftHand;
 
-            if(isLeftHand)
+            /*if(isLeftHand)
             {
                 if (_CoBlockStaminaDec != null)
                     StopCoroutine(_CoBlockStaminaDec);
@@ -336,7 +340,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (_CoBlockStaminaDec != null)
                     StopCoroutine(_CoBlockStaminaDec);
-            }
+            }*/
 
             _animator.SetBool(_hashBlocking, isLeftHand);
         }
@@ -344,8 +348,11 @@ public class PlayerController : MonoBehaviour
 
     public void ActRightHand()
     {
+        if (_player.currentStamina < 5.0f)
+            return;
+
         // Cant Attack while in the air 
-        if(_isGround && _attackTimer <= 0.0f)
+        if (_isGround && _attackTimer <= 0.0f)
         {
             _attackTimer = attackCoolTime;
             _comboResetTimer = comboResetCoolTime;

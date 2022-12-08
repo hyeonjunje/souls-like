@@ -112,8 +112,23 @@ public class Player : LivingEntity
     #region override
     public override void Hitted(float damage)
     {
-        base.Hitted(damage);
+        // 막았을 때
+        if (_pc.isDefense)
+        {
+            if (currentStamina < damage)
+            {
+                damage -= currentStamina;
+                ChangeStamina(-damage);
+                _pc.ActLeftHand(false);
+            }
+            else
+            {
+                ChangeStamina(-damage);
+                return;
+            }
+        }
 
+        base.Hitted(damage);
         ChangeHp(-damage);
     }
     #endregion

@@ -8,7 +8,7 @@ public class TargetMarkLookAt : MonoBehaviour
 
     private void Start()
     {
-        _player = GameObject.Find("CameraRoot").transform;
+        _player = GameObject.Find("PlayerCam").transform;
     }
 
 

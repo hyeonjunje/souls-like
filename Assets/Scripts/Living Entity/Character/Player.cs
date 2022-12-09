@@ -100,6 +100,13 @@ public class Player : LivingEntity
         }
     }
 
+    private void RecoveryHp()
+    {
+        if (_staminaRecoveryTimer <= 0.01 && currentStamina < maxStamina)
+        {
+            ChangeHp(recoveryStaminaAmount * Time.deltaTime);
+        }
+    }
 
     private void RecoveryStamina()
     {
@@ -112,6 +119,10 @@ public class Player : LivingEntity
     #region override
     public override void Hitted(float damage)
     {
+        // 회피중일 때
+        if (_pc.isRoll)
+            return;
+
         // 막았을 때
         if (_pc.isDefense)
         {

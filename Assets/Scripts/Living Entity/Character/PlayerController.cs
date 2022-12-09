@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
     public float detectionRange = 20.0f;
     public float viewAngle = 150.0f;
     public float comboResetCoolTime = 3.0f;
+    public AnimationCurve rollCurve;
+
 
     public BaseWeapon[] weaponSlots;
 
@@ -95,6 +97,8 @@ public class PlayerController : MonoBehaviour
     private bool _isAct => _isAttack || _isDefense;             // 이동이 아닌 어떤 행동을 하고 있는 상태
     private bool _isTarget => _currentTarget != null;
     private bool _isLock = false;                           // 록온 인 상태
+    private bool _isRoll = false;
+    public bool isRoll { get { return _isRoll; } }
 
     // gravity
     private float gravityValue = -9.81f * 2;
@@ -108,7 +112,8 @@ public class PlayerController : MonoBehaviour
     private float _jumpTimer;
     private float _fallTimer;
     private float _attackTimer;
-    public float _comboResetTimer;
+    private float _comboResetTimer;
+    private float _rollTimer;
 
 
     // tweener
@@ -130,6 +135,7 @@ public class PlayerController : MonoBehaviour
     private readonly int _hashIsTarget = Animator.StringToHash("isTarget");
     private readonly int _hashCombo = Animator.StringToHash("Combo");
     private readonly int _hashEquipWeapon = Animator.StringToHash("EquipWeapon");
+    private readonly int _hashRoll = Animator.StringToHash("Roll");
 
     private void Awake()
     {
@@ -153,14 +159,16 @@ public class PlayerController : MonoBehaviour
         _comboResetTimeTweener = DOTween.To(() => _comboResetTimer, x => _comboResetTimer = x, 0.0f, 0.0f).SetAutoKill(false).Pause()
             .OnComplete(() => _currentCombo = 0);
         _targetAimTweener = _cameraRoot.DOLookAt(Vector3.zero, 0.0f).SetAutoKill(false).Pause();
-            //DOTween.To(() => _cameraRoot.rotation, x => _cameraRoot.rotation = x, Quaternion.identity, 0.0f).SetAutoKill(false).Pause();
+
+        Keyframe roll_lastFrame = rollCurve[rollCurve.length - 1];
+        _rollTimer = roll_lastFrame.time;
     }
 
     private void Update()
     {
         JumpAndGravity();
         GroundCheck();
-        Move();
+        if (!_isRoll) Move();
     }
 
     private void LateUpdate()
@@ -225,7 +233,6 @@ public class PlayerController : MonoBehaviour
     {
         if (_isTarget)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(_currentTarget.position - _cameraRoot.position);
             _targetAimTweener.ChangeEndValue(_currentTarget.position, 0.5f, true).Restart();
 
             //_cameraRoot.LookAt(new Vector3(_currentTarget.position.x, _currentTarget.position.y, _currentTarget.position.z));
@@ -257,8 +264,8 @@ public class PlayerController : MonoBehaviour
 
     private void JumpAndGravity()
     {
-        /*if (_isAct)
-            return;*/
+        if (_isAct)
+            return;
 
         _isGround = Physics.CheckSphere(transform.position, groundRadius, groundLayers);
         _animator.SetBool(_hashIsGround, _isGround);
@@ -307,6 +314,56 @@ public class PlayerController : MonoBehaviour
     {
         _isGround = Physics.CheckSphere(transform.position, groundRadius, groundLayers);
         _animator.SetBool(_hashIsGround, _isGround);
+    }
+
+    private Coroutine _coRoll;
+    public void Roll()
+    {
+        if(!_isRoll && _isGround && _ic.move != Vector2.zero)
+        {
+            _isRoll = true;
+            _coRoll = StartCoroutine(CoRoll());
+        }
+    }
+
+    public void EndRoll()
+    {
+        _isRoll = false;
+
+        if (_coRoll != null)
+            StopCoroutine(_coRoll);
+    }
+
+    IEnumerator CoRoll()
+    {
+        if (_coRoll != null)
+            StopCoroutine(_coRoll);
+
+        float timer = 0;
+        _animator.SetTrigger(_hashRoll);
+        _player.ChangeStamina(-5f);
+
+        _controller.center = new Vector3(0.0f, 0.5f, 0.0f);
+        _controller.height = 1;
+
+        float rotation = Mathf.Atan2(_ic.move.x, _ic.move.y) * Mathf.Rad2Deg + _cameraRoot.eulerAngles.y;
+
+        transform.rotation = Quaternion.Euler(new Vector3(0, rotation, 0));
+        _cameraRoot.rotation = Quaternion.Euler(_cinemachineTargetPitch, _cinemachineTargetYaw, 0f);
+
+        while (timer < _rollTimer)
+        {
+            timer += Time.deltaTime;
+            float speed = rollCurve.Evaluate(timer);
+            Vector3 dir = transform.forward * speed + Vector3.up * _verticalVelocity;
+            _controller.Move(dir * Time.deltaTime);
+            yield return null;
+        }
+
+        _controller.center = new Vector3(0.0f, 1.1f, 0.0f);
+        _controller.height = 2;
+
+        _isRoll = false;
     }
     #endregion
 

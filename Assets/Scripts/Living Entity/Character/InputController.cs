@@ -20,9 +20,9 @@ public class InputController : MonoBehaviour
             _wheelValue = value;
 
             if (_wheelValue > 0)
-                pc.ChangeTarget(true);
+                _pc.ChangeTarget(true);
             else if(_wheelValue < 0)
-                pc.ChangeTarget(false);
+                _pc.ChangeTarget(false);
         }
     }
 
@@ -36,7 +36,7 @@ public class InputController : MonoBehaviour
             _isLockPressed = value;
 
             if (_isLockPressed)
-                pc.LockOnOff();
+                _pc.LockOnOff();
         }
     }
 
@@ -49,7 +49,7 @@ public class InputController : MonoBehaviour
         {
             _isLeftHand = value;
 
-            pc.ActLeftHand(_isLeftHand);
+            _pc.ActLeftHand(_isLeftHand);
         }
     }
 
@@ -64,17 +64,33 @@ public class InputController : MonoBehaviour
 
             if (_isRightHand)
             {
-                pc.ActRightHand();
+                _pc.ActRightHand();
+            }
+        }
+    }
+
+    private bool _isRoll;
+    public bool isRoll
+    {
+        get { return _isRoll; }
+        set
+        {
+            _isRoll = value;
+
+            if(_isRoll)
+            {
+                _pc.Roll();
             }
         }
     }
     
-    private PlayerController pc;
+    // connect
+    private PlayerController _pc;
 
 
     private void Awake()
     {
-        pc = GetComponent<PlayerController>();
+        _pc = GetComponent<PlayerController>();
     }
 
 
@@ -129,12 +145,17 @@ public class InputController : MonoBehaviour
     void OnNum1(InputValue value)
     {
         if (value.isPressed)
-            pc.ChangeWeapon(1);
+            _pc.ChangeWeapon(1);
     }
 
     void OnNum2(InputValue value)
     {
         if (value.isPressed)
-            pc.ChangeWeapon(2);
+            _pc.ChangeWeapon(2);
+    }
+
+    void OnRoll(InputValue value)
+    {
+        isRoll = value.isPressed;
     }
 }

@@ -10,6 +10,7 @@ public class OrcController : MonoBehaviour
     public float attackRange;
     public float attackCoolTime;
     public float hittedCoolTime;
+    public float detachTime;
 
     private BaseWeapon _weapon;
     public BaseWeapon weapon
@@ -100,11 +101,10 @@ public class OrcController : MonoBehaviour
             if (_currentTarget == null && _target != null)
             {
                 _currentTarget = _target;
-                _detachTimer = 5f;
-                DOTween.To(() => _detachTimer, x => _detachTimer = x, 0.0f, 5.0f).SetAutoKill(false).OnComplete(() =>
+                _detachTimer = detachTime;
+                DOTween.To(() => _detachTimer, x => _detachTimer = x, 0.0f, detachTime).SetAutoKill(false).OnComplete(() =>
                 {
-                    if (_target == null)
-                        _currentTarget = null;
+                    _currentTarget = null;
                 });
             }
         }

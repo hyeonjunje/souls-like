@@ -30,6 +30,11 @@ public class Player : LivingEntity
             _currentHp = Mathf.Clamp(_currentHp, 0, maxHp);
 
             hpBar.fillAmount = _currentHp / maxHp;
+
+            if(_currentHp == 0)
+            {
+                Dead();
+            }
         }
     }
 
@@ -50,8 +55,18 @@ public class Player : LivingEntity
     // connect
     private PlayerController _pc;
 
+    // state
+    public bool isDead => currentHp == 0;
+
+    // timer
     private float _staminaRecoveryTimer;
+
+    // tweener
     private Tweener _staimaCoolTimeTweener;
+
+    // animation Hash
+    private int _hashIsRevive = Animator.StringToHash("isRevive");
+
     protected override void Start()
     {
         base.Start();
@@ -67,6 +82,9 @@ public class Player : LivingEntity
 
     private void Update()
     {
+        if (isDead)
+            return;
+
         RecoveryStamina();
     }
 
@@ -83,7 +101,6 @@ public class Player : LivingEntity
             _staminaRecoveryTimer = recoveryStaminaCoolTime;
             _staimaCoolTimeTweener.ChangeEndValue(0.0f, recoveryStaminaCoolTime, true).Restart();
         }
-
         currentStamina += value;
     }
 
@@ -116,9 +133,18 @@ public class Player : LivingEntity
         }
     }
 
+    public void Revive()
+    {
+        _animator.SetTrigger(_hashIsRevive);
+        ChangeHp(maxHp);
+    }
+
     #region override
     public override void Hitted(float damage)
     {
+        if (isDead)
+            return;
+
         // 회피중일 때
         if (_pc.isRoll)
             return;
@@ -139,8 +165,19 @@ public class Player : LivingEntity
             }
         }
 
-        base.Hitted(damage);
         ChangeHp(-damage);
+        if (isDead)
+            return;
+
+        base.Hitted(damage);
+    }
+
+
+    public override void Dead()
+    {
+        base.Dead();
+
+        GameLogicManager.instance.GameOver();
     }
     #endregion
 

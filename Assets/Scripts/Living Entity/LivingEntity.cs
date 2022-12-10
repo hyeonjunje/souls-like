@@ -6,7 +6,8 @@ public class LivingEntity : MonoBehaviour
 {
     protected Animator _animator;
 
-    protected int _hashIsHitted = Animator.StringToHash("IsHitted");  
+    protected readonly int _hashIsHitted = Animator.StringToHash("IsHitted");
+    protected readonly int _hashIsDead = Animator.StringToHash("IsDead");
 
     protected virtual void Start()
     {
@@ -16,6 +17,11 @@ public class LivingEntity : MonoBehaviour
     public virtual void Hitted(float damage)
     {
         _animator.SetTrigger(_hashIsHitted);
+    }
+
+    public virtual void Dead()
+    {
+        _animator.SetTrigger(_hashIsDead);
     }
 
     #region animation event

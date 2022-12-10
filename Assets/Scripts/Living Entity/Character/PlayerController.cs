@@ -136,6 +136,7 @@ public class PlayerController : MonoBehaviour
     private readonly int _hashCombo = Animator.StringToHash("Combo");
     private readonly int _hashEquipWeapon = Animator.StringToHash("EquipWeapon");
     private readonly int _hashRoll = Animator.StringToHash("Roll");
+    
 
     private void Awake()
     {
@@ -166,6 +167,9 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (_player.isDead)
+            return;
+
         JumpAndGravity();
         GroundCheck();
         if (!_isRoll) Move();
@@ -173,6 +177,9 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (_player.isDead)
+            return;
+
         CameraRotation();
     }
 
@@ -233,9 +240,9 @@ public class PlayerController : MonoBehaviour
     {
         if (_isTarget)
         {
-            _targetAimTweener.ChangeEndValue(_currentTarget.position, 0.5f, true).Restart();
+            //_targetAimTweener.ChangeEndValue(_currentTarget.position, 0.5f, true).Restart();
 
-            //_cameraRoot.LookAt(new Vector3(_currentTarget.position.x, _currentTarget.position.y, _currentTarget.position.z));
+            _cameraRoot.LookAt(new Vector3(_currentTarget.position.x, _currentTarget.position.y, _currentTarget.position.z));
             _cinemachineTargetPitch = _cameraRoot.eulerAngles.x;
             _cinemachineTargetYaw = _cameraRoot.eulerAngles.y;
             return;

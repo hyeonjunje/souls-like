@@ -16,6 +16,11 @@ public class DropItem : MonoBehaviour, IInteractable
         Debug.Log("³ª°¨");
     }
 
+    public ItemData GetItemData()
+    {
+        return item;
+    }
+
     public Vector3 GetPos()
     {
         return transform.position;
@@ -24,6 +29,14 @@ public class DropItem : MonoBehaviour, IInteractable
     public void Interact()
     {
         UIController.instance.ShowLootItemUI(item);
+        switch(item.itemType)
+        {
+            case Define.EItemType.Equip:
+                break;
+            case Define.EItemType.Utils:
+                break;
+        }
+
         Destroy(gameObject);
     }
 }

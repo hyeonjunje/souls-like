@@ -27,7 +27,6 @@ public class PlayerController : MonoBehaviour
     [Range(0.0f, 0.3f)]
     public float rotationSmoothTime = 0.12f;
 
-    public BaseWeapon[] weaponSlots;
 
     private BaseWeapon _weapon;
     public BaseWeapon weapon
@@ -40,8 +39,7 @@ public class PlayerController : MonoBehaviour
             _weapon = value;
 
             if (_weapon == null)
-                _weapon = standardWeapon;
-
+                return;
             _weapon.Equip();
 
             // parent
@@ -53,12 +51,10 @@ public class PlayerController : MonoBehaviour
             _maxCombo = _weapon.maxCombo;
             _currentCombo = 0;
 
+
             _animator.SetInteger(_hashEquipWeapon, (int)_weapon.weaponType);
         }
     }
-
-    [Header("Temp")]
-    public BaseWeapon standardWeapon;
 
     [Header("Layer")]
     public LayerMask groundLayers;
@@ -74,6 +70,8 @@ public class PlayerController : MonoBehaviour
     private Animator _animator;
     private FieldOfView _fov;
     private WeaponHolder _weaponHolder;
+    private Inventory _inventory;
+    private PlayerUI _playerUI;
 
     // player
     private float _currentSpeed = 0.0f;
@@ -145,13 +143,16 @@ public class PlayerController : MonoBehaviour
         _animator = GetComponent<Animator>();
         _fov = _cameraRoot.GetComponent<FieldOfView>();
         _weaponHolder = GetComponent<WeaponHolder>();
+        _inventory = GetComponentInChildren<Inventory>();
+
+        _playerUI = GameObject.FindObjectOfType<PlayerUI>();
     }
 
     private void Start()
     {
         _cinemachineTargetYaw = _cameraRoot.rotation.eulerAngles.y;
 
-        weapon = null;
+        weapon = _inventory.myWeapons[0];
 
         _moveSpeedTweener = DOTween.To(() => _currentSpeed, x => _currentSpeed = x, 0.0f, 0.0f).SetAutoKill(false).Pause();
         _attackCoolTimeTweener = DOTween.To(() => _attackTimer, x => _attackTimer = x, 0.0f, attackCoolTime).SetAutoKill(false).Pause();
@@ -162,6 +163,8 @@ public class PlayerController : MonoBehaviour
 
         Keyframe roll_lastFrame = rollCurve[rollCurve.length - 1];
         _rollTimer = roll_lastFrame.time;
+
+        _playerUI.SetWeaponSlot(_inventory.myWeaponsData[0], 0);
     }
 
     private void Update()
@@ -380,9 +383,12 @@ public class PlayerController : MonoBehaviour
 
     public void ChangeWeapon(int slot)
     {
-        if(weaponSlots.Length > slot && weaponSlots[slot] != null && weapon != weaponSlots[slot])
+        slot = slot - 1;
+        if(_inventory.myWeapons.Count > slot && _inventory.myWeapons[slot] != null && weapon != _inventory.myWeapons[slot])
         {
-            weapon = weaponSlots[slot];
+            weapon = _inventory.myWeapons[slot];
+
+            _playerUI.SetWeaponSlot(_inventory.myWeaponsData[slot], slot);
         }
     }
 
@@ -487,6 +493,7 @@ public class PlayerController : MonoBehaviour
         if(_player.isInteract)
         {
             _player.closedInteractiveObject.Interact();
+            _inventory.AddItem(_player.closedInteractiveObject.GetItemData());
             _player.interactiveObjects.Remove(_player.closedInteractiveObject);
         }
     }

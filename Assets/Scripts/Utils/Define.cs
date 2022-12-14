@@ -25,4 +25,13 @@ public static class Define
         WaistL,
         Back,
     }
+
+
+    public enum EItemType
+    {
+        None,
+        Equip,
+        Utils,
+    }
+
 }

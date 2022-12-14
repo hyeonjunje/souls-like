@@ -4,6 +4,8 @@ using UnityEngine;
 
 public interface IInteractable
 {
+    public ItemData GetItemData();
+
     public Vector3 GetPos();
 
     public void EnterInteractZone();

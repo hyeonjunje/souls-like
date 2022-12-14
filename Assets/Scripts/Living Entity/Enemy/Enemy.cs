@@ -6,16 +6,22 @@ using DG.Tweening;
 
 public class Enemy : LivingEntity
 {
-    [Header("Player Info")]
+    [Header("Enemy Info")]
     public float maxHp;
     public float recoveryHpCoolTime = 10.0f;
     [Tooltip("Amount of stamina restored per second")]
     public float recoveryHpAmount = 2.0f;
 
+    [Header("Drop Item")]
+    public ItemData[] dropItems;
+    public DropItem drop;
+
     [Header("UI")]
     [SerializeField] private Image hpBar;
 
     [SerializeField] private TargetMark _targetMark;
+
+    private PlayerController _pc;
 
     private float _currentHp;
     public float currentHp
@@ -28,10 +34,16 @@ public class Enemy : LivingEntity
             _currentHp = Mathf.Clamp(_currentHp, 0, maxHp);
 
             hpBar.fillAmount = _currentHp / maxHp;
+
+            if (_currentHp == 0)
+                Dead();
         }
     }
 
     // connect
+
+    // state
+    public bool isDead => currentHp == 0;
 
     // timer
     private float _hpRecoveryTimer;
@@ -43,12 +55,17 @@ public class Enemy : LivingEntity
     {
         base.Start();
 
+        _pc = GameObject.FindObjectOfType<PlayerController>();
+
         currentHp = maxHp;
         _hpCoolTimeTweener = DOTween.To(() => _hpRecoveryTimer, x => _hpRecoveryTimer = x, 0.0f, recoveryHpCoolTime).SetAutoKill(false).Pause();
     }
 
     private void Update()
     {
+        if (isDead)
+            return;
+
         RecoveryHp();
     }
 
@@ -79,9 +96,30 @@ public class Enemy : LivingEntity
     #region override
     public override void Hitted(float damage)
     {
-        base.Hitted(damage);
+        if (isDead)
+            return;
 
         ChangeHp(-damage);
+
+        if (isDead)
+            return;
+
+        base.Hitted(damage);
+    }
+
+    public override void Dead()
+    {
+        base.Dead();
+
+        DropItem dropObject = Instantiate(drop, transform.position + Vector3.up, Quaternion.identity);
+        dropObject.item = dropItems[Random.Range(0, dropItems.Length)];
+
+        _targetMark.gameObject.layer = LayerMask.NameToLayer("DeadBody");
+
+        Debug.Log((_pc._currentTarget == _targetMark.transform) + " " + _pc._currentTarget + " " + _targetMark.transform);
+
+        if (_pc._currentTarget == _targetMark.transform)
+            _pc.SetTarget(null);
     }
 
     #endregion

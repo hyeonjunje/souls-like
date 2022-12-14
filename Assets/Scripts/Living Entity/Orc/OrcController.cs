@@ -50,6 +50,7 @@ public class OrcController : MonoBehaviour
     private Animator _animator;
     private NavMeshAgent _agent;
     private WeaponHolder _weaponHolder;
+    private Orc _orc;
 
     // target
     private Transform _target => _fov.closedVisibleTarget;
@@ -80,6 +81,8 @@ public class OrcController : MonoBehaviour
         _animator = GetComponent<Animator>();
         _agent = GetComponent<NavMeshAgent>();
         _weaponHolder = GetComponent<WeaponHolder>();
+        _orc = GetComponent<Orc>();
+
         _attackCoolTimeTweener = DOTween.To(() => _attackTimer, x => _attackTimer = x, 0.0f, 0.0f).SetAutoKill(false).Pause();
         _hittedCoolTimeTweener = DOTween.To(() => _hittedTimer, x => _hittedTimer = x, 0.0f, 0.0f).SetAutoKill(false).Pause();
 
@@ -89,6 +92,12 @@ public class OrcController : MonoBehaviour
 
     private void Update()
     {
+        if (_orc.isDead)
+        {
+            return;
+        }
+
+
         DetachTarget();
         Move();
         Attack();
@@ -163,5 +172,10 @@ public class OrcController : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void ResetPath()
+    {
+        _agent.ResetPath();
     }
 }

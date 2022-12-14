@@ -18,13 +18,13 @@ TagManager:
   - Ground
   - Player
   - Enemy
-  - 
+  - DeadBody
   - Target
   - 
   - 
   - Hitbox
   - 
-  - 
+  - Item
   - 
   - 
   - 

@@ -83,14 +83,31 @@ public class InputController : MonoBehaviour
             }
         }
     }
-    
+
+    private bool _isInteract;
+    public bool isInteract
+    {
+        get { return _isInteract; }
+        set
+        {
+            _isInteract = value;
+
+            if (_isInteract)
+            {
+                _pc.Interact();
+            }
+        }
+    }
+
     // connect
     private PlayerController _pc;
+    private Player _player;
 
 
     private void Awake()
     {
         _pc = GetComponent<PlayerController>();
+        _player = GetComponent<Player>();
     }
 
 
@@ -157,5 +174,11 @@ public class InputController : MonoBehaviour
     void OnRoll(InputValue value)
     {
         isRoll = value.isPressed;
+    }
+
+
+    void OnInteract(InputValue value)
+    {
+        isInteract = value.isPressed;
     }
 }

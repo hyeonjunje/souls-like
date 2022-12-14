@@ -86,8 +86,7 @@ public class PlayerController : MonoBehaviour
 
     // object
     private List<Transform> _objects => _fov.visibleTargets;
-    private Transform _closedTarget = null;
-    private Transform _currentTarget = null;
+    public Transform _currentTarget = null;
 
     // state
     private bool _isGround;
@@ -173,6 +172,8 @@ public class PlayerController : MonoBehaviour
         JumpAndGravity();
         GroundCheck();
         if (!_isRoll) Move();
+
+        
     }
 
     private void LateUpdate()
@@ -320,6 +321,7 @@ public class PlayerController : MonoBehaviour
     private void GroundCheck()
     {
         _isGround = Physics.CheckSphere(transform.position, groundRadius, groundLayers);
+        Debug.Log(_isGround);
         _animator.SetBool(_hashIsGround, _isGround);
     }
 
@@ -375,7 +377,6 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Hand
-    private Coroutine _CoBlockStaminaDec;
 
     public void ChangeWeapon(int slot)
     {
@@ -393,18 +394,6 @@ public class PlayerController : MonoBehaviour
         if(_isGround || weapon.weaponType != Define.EWeaponType.None)
         {
             _isDefense = isLeftHand;
-
-            /*if(isLeftHand)
-            {
-                if (_CoBlockStaminaDec != null)
-                    StopCoroutine(_CoBlockStaminaDec);
-                _CoBlockStaminaDec = StartCoroutine(_player.CoEverDecresingStamina(-3f));
-            }
-            else
-            {
-                if (_CoBlockStaminaDec != null)
-                    StopCoroutine(_CoBlockStaminaDec);
-            }*/
 
             _animator.SetBool(_hashBlocking, isLeftHand);
         }
@@ -456,9 +445,9 @@ public class PlayerController : MonoBehaviour
         // enter lock state
         if (!_isLock)
         {
-            _closedTarget = _fov.closedVisibleTarget;
+            _currentTarget = _fov.closedVisibleTarget;
 
-            SetTarget(_closedTarget);
+            SetTarget(_currentTarget);
             _isLock = true;
         }
         // enter unlock state
@@ -476,7 +465,7 @@ public class PlayerController : MonoBehaviour
         {
             _objects.OrderBy(x => Vector3.Distance(transform.position, x.position));
 
-            int index = _objects.IndexOf(_closedTarget);
+            int index = _objects.IndexOf(_currentTarget);
             if (index == -1 && _objects.Count == 1)
                 return;
 
@@ -485,9 +474,20 @@ public class PlayerController : MonoBehaviour
             else
                 index = (index - 1 == -1 ? _objects.Count - 1 : index - 1);
 
-            _closedTarget = _objects[index];
+            _currentTarget = _objects[index];
 
-            SetTarget(_closedTarget);
+            SetTarget(_currentTarget);
+        }
+    }
+    #endregion
+
+    #region Interact
+    public void Interact()
+    {
+        if(_player.isInteract)
+        {
+            _player.closedInteractiveObject.Interact();
+            _player.interactiveObjects.Remove(_player.closedInteractiveObject);
         }
     }
     #endregion

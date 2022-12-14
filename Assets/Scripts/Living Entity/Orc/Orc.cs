@@ -13,6 +13,13 @@ public class Orc : Enemy
         _oc = GetComponent<OrcController>();
     }
 
+    public override void Dead()
+    {
+        base.Dead();
+
+        _oc.ResetPath();
+    }
+
     #region animation event
     public override void EnableHitBox(int active)
     {

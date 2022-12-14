@@ -5718,6 +5718,9 @@ MonoBehaviour:
   maxHp: 100
   recoveryHpCoolTime: 10
   recoveryHpAmount: 2
+  dropItems:
+  - {fileID: 11400000, guid: 28639560e47dd1b4e8bafd9fe7800220, type: 2}
+  drop: {fileID: 8074767533995993967, guid: 008b500ce86c8604081ab3f331ea9ea2, type: 3}
   hpBar: {fileID: 5109923189606384460}
   _targetMark: {fileID: 4993771520554446751}
 --- !u!114 &8749539561632998194

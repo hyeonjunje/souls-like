@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.Linq;
 
 [RequireComponent(typeof(PlayerController))]
 public class Player : LivingEntity
@@ -52,11 +53,31 @@ public class Player : LivingEntity
         }
     }
 
+    // interact
+    public List<IInteractable> interactiveObjects = new List<IInteractable>();
+    public IInteractable closedInteractiveObject
+    {
+        get
+        {
+            IInteractable result = null;
+            foreach(var interactiveObject in interactiveObjects)
+            {
+                if (result == null)
+                    result = interactiveObject;
+                else
+                    result = Vector3.Distance(transform.position, result.GetPos()) <= Vector3.Distance(transform.position, interactiveObject.GetPos()) ?
+                        result : interactiveObject;
+            }
+            return result;
+        }
+    }
+
     // connect
     private PlayerController _pc;
 
     // state
     public bool isDead => currentHp == 0;
+    public bool isInteract => closedInteractiveObject != null;
 
     // timer
     private float _staminaRecoveryTimer;
@@ -186,6 +207,29 @@ public class Player : LivingEntity
     {
         bool flag = active == 1 ? true : false;
         _pc.weapon.EnableHitBox(flag);
+    }
+    #endregion
+
+
+    #region OnTrigger
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.layer == LayerMask.NameToLayer("Item"))
+        {
+            IInteractable interactiveObject = other.GetComponent<IInteractable>();
+            interactiveObject.EnterInteractZone();
+            interactiveObjects.Add(interactiveObject);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Item"))
+        {
+            IInteractable interactiveObject = other.GetComponent<IInteractable>();
+            interactiveObject.ExitInteractZone();
+            interactiveObjects.Remove(interactiveObject);
+        }
     }
     #endregion
 }

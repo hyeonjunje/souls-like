@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using System.Linq;
+using Cinemachine;
 
 
 [RequireComponent(typeof(CharacterController), typeof(InputController), typeof(UnityEngine.InputSystem.PlayerInput))]
@@ -22,7 +23,9 @@ public class PlayerController : MonoBehaviour
     public float viewAngle = 150.0f;
     public float comboResetCoolTime = 3.0f;
     public AnimationCurve rollCurve;
-
+    [Tooltip("How fast the character turns to face movement direction")]
+    [Range(0.0f, 0.3f)]
+    public float rotationSmoothTime = 0.12f;
 
     public BaseWeapon[] weaponSlots;
 
@@ -61,10 +64,7 @@ public class PlayerController : MonoBehaviour
     public LayerMask groundLayers;
     public LayerMask enemyLayers;
 
-    [Tooltip("How fast the character turns to face movement direction")]
-    [Range(0.0f, 0.3f)]
-    public float rotationSmoothTime = 0.12f;
-
+    [Header("Connect")]
     [SerializeField] private Transform _cameraRoot;
 
     // connect
@@ -235,7 +235,7 @@ public class PlayerController : MonoBehaviour
             LockOnOff();
         }
     }
-
+    private RaycastHit hit;
     private void CameraRotation()
     {
         if (_isTarget)

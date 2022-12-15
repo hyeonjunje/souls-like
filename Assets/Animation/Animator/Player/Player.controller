@@ -1422,6 +1422,12 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
+  - m_Name: EnterRoom
+    m_Type: 9
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -2207,10 +2213,10 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 3740269444725605344}
-    m_Position: {x: 390, y: 420, z: 0}
+    m_Position: {x: -140, y: 380, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -791106366794707202}
-    m_Position: {x: 240, y: 320, z: 0}
+    m_Position: {x: -140, y: 290, z: 0}
   m_ChildStateMachines:
   - serializedVersion: 1
     m_StateMachine: {fileID: 3423288063594045991}
@@ -2230,8 +2236,8 @@ AnimatorStateMachine:
   - first: {fileID: -6438485685721067720}
     second: []
   m_StateMachineBehaviours: []
-  m_AnyStatePosition: {x: 720, y: 430, z: 0}
-  m_EntryPosition: {x: 100, y: 380, z: 0}
+  m_AnyStatePosition: {x: 140, y: 440, z: 0}
+  m_EntryPosition: {x: -130, y: 90, z: 0}
   m_ExitPosition: {x: 770, y: 20, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: -6233420755481994859}

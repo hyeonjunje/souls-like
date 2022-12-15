@@ -99,6 +99,21 @@ public class InputController : MonoBehaviour
         }
     }
 
+    private bool _isUse;
+    public bool isUse
+    {
+        get { return _isUse; }
+        set
+        {
+            _isUse = value;
+
+            if (_isUse)
+            {
+                _player.UseItem();
+            }
+        }
+    }
+
     // connect
     private PlayerController _pc;
     private Player _player;
@@ -180,5 +195,11 @@ public class InputController : MonoBehaviour
     void OnInteract(InputValue value)
     {
         isInteract = value.isPressed;
+    }
+
+
+    void OnUse(InputValue value)
+    {
+        isUse = value.isPressed;
     }
 }

@@ -6,14 +6,18 @@ public class Inventory : MonoBehaviour
 {
     public List<BaseWeapon> myWeapons;
     public List<ItemData> myWeaponsData;
-    public int potionAmount;
 
+    public ItemData utilItem;
+    public int maxAmount;
+    public int currentAmount;
 
     private WeaponHolder _weaponHolder;
 
     private void Start()
     {
         _weaponHolder = GameObject.Find("Player").GetComponent<WeaponHolder>();
+
+        currentAmount = maxAmount;
     }
 
 

@@ -96,6 +96,7 @@ public class PlayerController : MonoBehaviour
     private bool _isLock = false;                           // 록온 인 상태
     private bool _isRoll = false;
     public bool isRoll { get { return _isRoll; } }
+    public bool isControllable = true;
 
     // gravity
     private float gravityValue = -9.81f * 2;
@@ -165,10 +166,14 @@ public class PlayerController : MonoBehaviour
         _rollTimer = roll_lastFrame.time;
 
         _playerUI.SetWeaponSlot(_inventory.myWeaponsData[0], 0);
+        _playerUI.SetUtillSlot(_inventory.utilItem, _inventory.maxAmount);
     }
 
     private void Update()
     {
+        if (!isControllable)
+            return;
+
         if (_player.isDead)
             return;
 
@@ -181,6 +186,9 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (!isControllable)
+            return;
+
         if (_player.isDead)
             return;
 
@@ -441,6 +449,8 @@ public class PlayerController : MonoBehaviour
         _currentTarget?.GetComponent<TargetMark>().SetTargetActive(false);
 
         _currentTarget = target;
+        if (_currentTarget == null)
+            _isLock = false;
         _animator.SetBool(_hashIsTarget, _isTarget);
 
         _currentTarget?.GetComponent<TargetMark>().SetTargetActive(true);
@@ -493,9 +503,18 @@ public class PlayerController : MonoBehaviour
         if(_player.isInteract)
         {
             _player.closedInteractiveObject.Interact();
+            if (_player.closedInteractiveObject.GetItemData() == null)
+                return;
             _inventory.AddItem(_player.closedInteractiveObject.GetItemData());
             _player.interactiveObjects.Remove(_player.closedInteractiveObject);
         }
+    }
+
+
+    public void EnterWall()
+    {
+        _controller.Move(transform.forward * (3 * Time.deltaTime) + Vector3.up * _verticalVelocity * Time.deltaTime);
+        _animator.SetFloat(_hashMove, 3);
     }
     #endregion
 }

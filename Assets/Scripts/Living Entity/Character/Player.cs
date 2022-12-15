@@ -20,6 +20,9 @@ public class Player : LivingEntity
     [SerializeField] private Image hpBar;
     [SerializeField] private Image staminaBar;
 
+    [Header("Particle System")]
+    [SerializeField] private ParticleSystem recoveryParticleSystem;
+
     private float _currentHp;
     public float currentHp
     {
@@ -74,6 +77,8 @@ public class Player : LivingEntity
 
     // connect
     private PlayerController _pc;
+    private PlayerUI _playerUI;
+    private Inventory _inventory;
 
     // state
     public bool isDead => currentHp == 0;
@@ -93,6 +98,8 @@ public class Player : LivingEntity
         base.Start();
 
         _pc = GetComponent<PlayerController>();
+        _playerUI = GameObject.FindObjectOfType<PlayerUI>();
+        _inventory = GetComponentInChildren<Inventory>();
 
         currentHp = maxHp;
         currentStamina = maxStamina;
@@ -160,6 +167,19 @@ public class Player : LivingEntity
         ChangeHp(maxHp);
     }
 
+
+    public void UseItem()
+    {
+        if (_inventory.currentAmount <= 0 || currentHp == maxHp)
+            return;
+
+        _inventory.currentAmount--;
+        _playerUI.UtillSlotAmount(_inventory.currentAmount);
+
+        recoveryParticleSystem.Play();
+        ChangeHp(30);
+    }
+
     #region override
     public override void Hitted(float damage)
     {
@@ -214,7 +234,7 @@ public class Player : LivingEntity
     #region OnTrigger
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.layer == LayerMask.NameToLayer("Item"))
+        if(other.gameObject.layer == LayerMask.NameToLayer("Interactive"))
         {
             IInteractable interactiveObject = other.GetComponent<IInteractable>();
             interactiveObject.EnterInteractZone();
@@ -224,7 +244,7 @@ public class Player : LivingEntity
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Item"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Interactive"))
         {
             IInteractable interactiveObject = other.GetComponent<IInteractable>();
             interactiveObject.ExitInteractZone();

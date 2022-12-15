@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using static Define;
 
 public class Enemy : LivingEntity
 {
     [Header("Enemy Info")]
+    public EEnemyType enemyType;
     public float maxHp;
     public float recoveryHpCoolTime = 10.0f;
     [Tooltip("Amount of stamina restored per second")]
@@ -17,7 +19,7 @@ public class Enemy : LivingEntity
     public DropItem drop;
 
     [Header("UI")]
-    [SerializeField] private Image hpBar;
+    public Image hpBar;
 
     [SerializeField] private TargetMark _targetMark;
 
@@ -57,7 +59,9 @@ public class Enemy : LivingEntity
 
         _pc = GameObject.FindObjectOfType<PlayerController>();
 
-        currentHp = maxHp;
+        if(enemyType != Define.EEnemyType.Boss)
+            currentHp = maxHp;
+
         _hpCoolTimeTweener = DOTween.To(() => _hpRecoveryTimer, x => _hpRecoveryTimer = x, 0.0f, recoveryHpCoolTime).SetAutoKill(false).Pause();
     }
 
@@ -80,6 +84,11 @@ public class Enemy : LivingEntity
     public void SetTargetActive(bool active)
     {
         _targetMark.SetTargetActive(active);
+    }
+
+    public void SetHp(float value)
+    {
+        currentHp = value;
     }
 
     public void ChangeHp(float value)
@@ -111,15 +120,21 @@ public class Enemy : LivingEntity
     {
         base.Dead();
 
-        DropItem dropObject = Instantiate(drop, transform.position + Vector3.up, Quaternion.identity);
-        dropObject.item = dropItems[Random.Range(0, dropItems.Length)];
+        if(dropItems.Length != 0)
+        {
+            DropItem dropObject = Instantiate(drop, transform.position + Vector3.up, Quaternion.identity);
+            dropObject.item = dropItems[Random.Range(0, dropItems.Length)];
+        }
 
         _targetMark.gameObject.layer = LayerMask.NameToLayer("DeadBody");
 
-        Debug.Log((_pc._currentTarget == _targetMark.transform) + " " + _pc._currentTarget + " " + _targetMark.transform);
-
         if (_pc._currentTarget == _targetMark.transform)
             _pc.SetTarget(null);
+
+        if(enemyType == Define.EEnemyType.Boss)
+        {
+            GetComponent<Boss>()?.DeadEvent();
+        }
     }
 
     #endregion

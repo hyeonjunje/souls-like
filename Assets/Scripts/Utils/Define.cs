@@ -34,4 +34,19 @@ public static class Define
         Utils,
     }
 
+
+    public enum EBossWallType
+    {
+        None,
+        Enterance,
+        Exit,
+    }
+
+
+    public enum EEnemyType
+    {
+        Common,
+        Elite,
+        Boss
+    }
 }

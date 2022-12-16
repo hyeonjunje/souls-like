@@ -15,13 +15,27 @@ public abstract class BaseWeapon : MonoBehaviour
     public Hitbox hitbox;
     public SkillData[] skillDatas;
 
+    private Player _player;
+
+    private void Start()
+    {
+        _player = GetComponentInParent<Player>();
+    }
 
     public abstract void Use(int currentCombo, float op);
 
 
-    public abstract void Equip();
+    public virtual void Equip()
+    {
+        if (_player != null)
+            _player.op += op;
+    }
 
-    public abstract void UnEquip();
+    public virtual void UnEquip()
+    {
+        if (_player != null)
+            _player.op -= op;
+    }
 
     public void EnableHitBox(bool active)
     {

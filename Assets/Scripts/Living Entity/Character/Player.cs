@@ -75,9 +75,33 @@ public class Player : LivingEntity
         }
     }
 
+    private int _op;
+    public int op
+    {
+        get { return _op; }
+        set
+        {
+            _op = value;
+
+            _playerUI.opText.text = _op.ToString();
+        }
+    }
+
+    private int _dp;
+    public int dp
+    {
+        get { return _dp; }
+        set
+        {
+            _dp = value;
+
+            _playerUI.dpText.text = _dp.ToString();
+        }
+    }
+
     // connect
     private PlayerController _pc;
-    private PlayerUI _playerUI;
+    [SerializeField] private PlayerUI _playerUI;
     private Inventory _inventory;
 
     // state
@@ -98,7 +122,6 @@ public class Player : LivingEntity
         base.Start();
 
         _pc = GetComponent<PlayerController>();
-        _playerUI = GameObject.FindObjectOfType<PlayerUI>();
         _inventory = GetComponentInChildren<Inventory>();
 
         currentHp = maxHp;
@@ -110,6 +133,8 @@ public class Player : LivingEntity
 
     private void Update()
     {
+        Debug.Log("공격력 : " + op + " 방어력 : " + dp);
+
         if (isDead)
             return;
 
@@ -183,6 +208,10 @@ public class Player : LivingEntity
     #region override
     public override void Hitted(float damage)
     {
+        damage -= dp;
+        if (damage < 0)
+            damage = 0;
+
         if (isDead)
             return;
 
@@ -220,6 +249,7 @@ public class Player : LivingEntity
 
         GameLogicManager.instance.GameOver();
     }
+
     #endregion
 
     #region animation event

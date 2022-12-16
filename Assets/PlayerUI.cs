@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class PlayerUI : MonoBehaviour
 {
+    [Header("Stat")]
+    public Text opText;
+    public Text dpText;
+
     [Header("WeaponSlot")]
     public Image weaponImage;
     public Text weaponSlotText;

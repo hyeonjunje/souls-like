@@ -7,12 +7,12 @@ public class Hand : BaseWeapon
 
     public override void Equip()
     {
-
+        base.Equip();
     }
 
     public override void UnEquip()
     {
-
+        base.UnEquip();
     }
 
 

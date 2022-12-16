@@ -43,6 +43,9 @@ public class Enemy : LivingEntity
         }
     }
 
+    public int op;
+    public int dp;
+
     // connect
 
     // state
@@ -108,6 +111,10 @@ public class Enemy : LivingEntity
     private Coroutine _coShowDamageText = null;
     public override void Hitted(float damage)
     {
+        damage -= dp;
+        if (damage < 0)
+            damage = 0;
+
         if (isDead)
             return;
 

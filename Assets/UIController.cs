@@ -19,12 +19,21 @@ public class UIController : MonoBehaviour
     public Image itemImage;
     public Text itemName;
 
+    Sequence seq;
+
     public void ShowLootItemUI(ItemData item)
     {
-        Sequence seq = DOTween.Sequence();
+        seq.Kill();
 
-        seq = DOTween.Sequence().AppendCallback(() => itemLootUI.gameObject.SetActive(true))
-        .Append(itemLootUI.DOFade(1, 2f).From(0))
+        seq = DOTween.Sequence().AppendCallback(() =>
+        {
+            itemLootUI.alpha = 0;
+
+            itemLootUI.gameObject.SetActive(true);
+            itemImage.sprite = item.itemSprite;
+            itemName.text = item.itemName;
+        })
+        .Append(itemLootUI.DOFade(1, 2f))
         .Append(itemLootUI.DOFade(0, 2f))
         .AppendCallback(() => itemLootUI.gameObject.SetActive(false));
     }

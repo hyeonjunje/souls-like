@@ -15,7 +15,7 @@ public class AttackState : AIState
     {
         _timer = 0.0f;
         enemy._animator.SetTrigger(_hashIsAttack);
-        enemy.weapon?.Use(enemy.currentCombo, 5f);
+        enemy.weapon?.Use(enemy.currentCombo, enemy._enemy.op);
 
         enemy.currentCombo = enemy.currentCombo + 1 == enemy.maxCombo ? 0 : enemy.currentCombo + 1;
     }

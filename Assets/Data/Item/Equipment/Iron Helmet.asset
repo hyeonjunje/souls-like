@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b3579cb596d83f445943faa4e56a370e, type: 3}
-  m_Name: Potion
+  m_Name: Iron Helmet
   m_EditorClassIdentifier: 
-  _itemId: 11
-  _itemName: "\uD3EC\uC158"
-  _itemSprite: {fileID: 21300000, guid: 894a6312f23ca7f479fff65e46d629b8, type: 3}
+  _itemId: 24
+  _itemName: "\uCCA0 \uD22C\uAD6C"
+  _itemSprite: {fileID: 21300000, guid: d0b4dcf719008a04abc34334c083e9ac, type: 3}
   _itemPrefab: {fileID: 0}
-  _itemType: 3
-  _equipmentType: 0
+  _itemType: 2
+  _equipmentType: 2

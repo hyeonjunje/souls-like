@@ -11,7 +11,8 @@ using Cinemachine;
 public class PlayerController : MonoBehaviour
 {
     [Header("Player")]
-    public float speed;
+    public float speed = 3.0f;
+    public float sprintSpeed = 6.0f;
     public float lookSensitivity;
     public float jumpHeight = 1.2f;
     [Tooltip("Jump coolTime. Useful when you keep jumping")]
@@ -44,7 +45,10 @@ public class PlayerController : MonoBehaviour
 
             // parent
             if (prevWeapon != null)
+            {
+                prevWeapon.UnEquip();
                 _weaponHolder.HoldWeapon(prevWeapon);
+            }
             _weaponHolder.EquipWeapon(_weapon);
 
             // setting combo
@@ -205,7 +209,7 @@ public class PlayerController : MonoBehaviour
 
         if (_ic.move != Vector2.zero)
         {
-            targetSpeed = _ic.sprint ? 6.0f : 3.0f;
+            targetSpeed = _ic.sprint ? sprintSpeed : speed;
             if (_isAct) targetSpeed = 0f;
 
             _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
@@ -427,7 +431,7 @@ public class PlayerController : MonoBehaviour
             _animator.SetTrigger(_hashIsAttack);
             _animator.SetInteger(_hashCombo, _currentCombo);
 
-            weapon?.Use(_currentCombo, 10);
+            weapon?.Use(_currentCombo, _player.op);
 
             _currentCombo = _currentCombo + 1 == _maxCombo ? 0 : _currentCombo + 1;
 

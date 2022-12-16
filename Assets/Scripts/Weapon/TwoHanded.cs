@@ -8,12 +8,12 @@ public class TwoHanded : BaseWeapon
 
     public override void Equip()
     {
-
+        base.Equip();
     }
 
     public override void UnEquip()
     {
-
+        base.UnEquip();
     }
 
     public override void Use(int currentCombo, float op)

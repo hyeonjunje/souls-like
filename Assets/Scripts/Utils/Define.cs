@@ -30,6 +30,7 @@ public static class Define
     public enum EItemType
     {
         None,
+        Weapon,
         Equip,
         Utils,
     }
@@ -48,5 +49,19 @@ public static class Define
         Common,
         Elite,
         Boss
+    }
+
+
+    public enum EEquipmentType
+    {
+        None,
+        Accessorie,
+        Helmet,
+        Arms,
+        Chest,
+        Pant,
+        Gloves,
+        Boots,
+        Size
     }
 }

@@ -20,4 +20,7 @@ public class ItemData : ScriptableObject
 
     [SerializeField] private Define.EItemType _itemType;
     public Define.EItemType itemType { get { return _itemType; } }
+
+    [SerializeField] private Define.EEquipmentType _equipmentType;
+    public Define.EEquipmentType equipmentType { get { return _equipmentType; } }
 }

@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LivingEntity : MonoBehaviour
+public abstract class LivingEntity : MonoBehaviour
 {
     protected Animator _animator;
 
     protected readonly int _hashIsHitted = Animator.StringToHash("IsHitted");
     protected readonly int _hashIsDead = Animator.StringToHash("IsDead");
+
 
     protected virtual void Start()
     {

@@ -14,6 +14,8 @@ public class FieldOfView : MonoBehaviour
     //[HideInInspector]
     public List<Transform> visibleTargets = new List<Transform>();
 
+    public Transform detectedPlayer = null;
+
     [HideInInspector]
     public Transform closedVisibleTarget;
 
@@ -26,7 +28,7 @@ public class FieldOfView : MonoBehaviour
         StartCoroutine(FindTargetsWithDelay(0.2f));
     }
 
-    IEnumerator FindTargetsWithDelay(float delay)
+    public IEnumerator FindTargetsWithDelay(float delay)
     {
         var wait = new WaitForSeconds(delay);
         while(true)
@@ -46,18 +48,29 @@ public class FieldOfView : MonoBehaviour
 
         Collider[] targetsInViewRadius = Physics.OverlapSphere(offsetTransform.position, viewRaduis, enemyLayer);
 
-        for(int i = 0; i < targetsInViewRadius.Length; i++)
+        detectedPlayer = null;
+        foreach (var a in targetsInViewRadius)
+            if (a.gameObject.layer == LayerMask.NameToLayer("Player"))
+            {
+                detectedPlayer = a.transform;
+                break;
+            }
+
+        for (int i = 0; i < targetsInViewRadius.Length; i++)
         {
             Transform target = targetsInViewRadius[i].transform;
             if (target.tag != "Target")
                 continue;
 
             Vector3 dirToTarget = GetDirToTarget(target);
-            if(Vector3.Angle(offsetTransform.forward, dirToTarget) < viewAngle / 2)
+
+            if(Vector3.Angle(offsetTransform.forward, dirToTarget) < viewAngle / 2 && Vector3.Angle(offsetTransform.forward, dirToTarget) > -viewAngle / 2)
             {
                 float dstToTarget = Vector3.Distance(offsetTransform.position, target.position);
                 if(!Physics.Raycast(offsetTransform.position, dirToTarget, dstToTarget, blockLayer))
                 {
+                    Debug.Log("¿©±â¾ß");
+
                     visibleTargets.Add(target);
 
                     if (closedVisibleTarget == null || 

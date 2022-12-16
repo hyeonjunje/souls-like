@@ -24,6 +24,7 @@ public class Enemy : LivingEntity
     [SerializeField] private TargetMark _targetMark;
 
     private PlayerController _pc;
+    private EnemyController _ec;
 
     private float _currentHp;
     public float currentHp
@@ -58,8 +59,9 @@ public class Enemy : LivingEntity
         base.Start();
 
         _pc = GameObject.FindObjectOfType<PlayerController>();
+        _ec = GetComponent<EnemyController>();
 
-        if(enemyType != Define.EEnemyType.Boss)
+        if (enemyType == Define.EEnemyType.Common)
             currentHp = maxHp;
 
         _hpCoolTimeTweener = DOTween.To(() => _hpRecoveryTimer, x => _hpRecoveryTimer = x, 0.0f, recoveryHpCoolTime).SetAutoKill(false).Pause();
@@ -103,6 +105,7 @@ public class Enemy : LivingEntity
     }
 
     #region override
+    private Coroutine _coShowDamageText = null;
     public override void Hitted(float damage)
     {
         if (isDead)
@@ -113,7 +116,26 @@ public class Enemy : LivingEntity
         if (isDead)
             return;
 
-        base.Hitted(damage);
+        if (enemyType != EEnemyType.Common)
+        {
+            if (_coShowDamageText != null)
+                StopCoroutine(_coShowDamageText);
+            _coShowDamageText = StartCoroutine(CoShowDamageText(damage));
+        }
+
+        _ec.Hitted();
+    }
+
+    IEnumerator CoShowDamageText(float damage)
+    {
+        Text damageText = hpBar.transform.GetChild(0).GetComponent<Text>();
+
+        damageText.gameObject.SetActive(true);
+        damageText.text = damage.ToString();
+
+        yield return new WaitForSeconds(1.5f);
+
+        damageText.gameObject.SetActive(false);
     }
 
     public override void Dead()
@@ -131,11 +153,19 @@ public class Enemy : LivingEntity
         if (_pc._currentTarget == _targetMark.transform)
             _pc.SetTarget(null);
 
-        if(enemyType == Define.EEnemyType.Boss)
+        if(enemyType != Define.EEnemyType.Common)
         {
             GetComponent<Boss>()?.DeadEvent();
         }
     }
 
+    #endregion
+
+    #region animation event
+    public override void EnableHitBox(int active)
+    {
+        bool flag = active == 1 ? true : false;
+        _ec.weapon.EnableHitBox(flag);
+    }
     #endregion
 }

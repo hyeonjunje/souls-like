@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.AI;
 using DG.Tweening;
 
-public class OrcController : MonoBehaviour
+public class OrcController : EnemyController
 {
-    [Header("Orc")]
+/*    [Header("Orc")]
     public float attackRange;
     public float attackCoolTime;
     public float hittedCoolTime;
@@ -73,11 +73,12 @@ public class OrcController : MonoBehaviour
     // animation Hash
     private readonly int _hashIsAttack = Animator.StringToHash("IsAttack");
     private readonly int _hashIsWalk = Animator.StringToHash("IsWalk");
-    private readonly int _hashIsHitted = Animator.StringToHash("IsHitted");
+    private readonly int _hashIsHitted = Animator.StringToHash("IsHitted");*/
 
-    private void Start()
+    protected override void Start()
     {
-        _fov = GetComponent<FieldOfView>();
+        base.Start();
+/*        _fov = GetComponent<FieldOfView>();
         _animator = GetComponent<Animator>();
         _agent = GetComponent<NavMeshAgent>();
         _weaponHolder = GetComponent<WeaponHolder>();
@@ -86,24 +87,25 @@ public class OrcController : MonoBehaviour
         _attackCoolTimeTweener = DOTween.To(() => _attackTimer, x => _attackTimer = x, 0.0f, 0.0f).SetAutoKill(false).Pause();
         _hittedCoolTimeTweener = DOTween.To(() => _hittedTimer, x => _hittedTimer = x, 0.0f, 0.0f).SetAutoKill(false).Pause();
 
-        weapon = null;
+        weapon = null;*/
     }
 
 
-    private void Update()
+    protected override void Update()
     {
-        if (_orc.isDead)
+        base.Update();
+/*        if (_orc.isDead)
         {
             return;
-        }
+        }*/
 
 
-        DetachTarget();
+        /*DetachTarget();
         Move();
-        Attack();
+        Attack();*/
     }
 
-    private void DetachTarget()
+/*    private void DetachTarget()
     {
         if(_detachTimer <= 0.0f)
         {
@@ -177,5 +179,5 @@ public class OrcController : MonoBehaviour
     public void ResetPath()
     {
         _agent.ResetPath();
-    }
+    }*/
 }

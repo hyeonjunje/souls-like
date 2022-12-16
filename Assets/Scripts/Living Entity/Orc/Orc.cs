@@ -4,27 +4,25 @@ using UnityEngine;
 
 public class Orc : Enemy
 {
-    private OrcController _oc;
-
     protected override void Start()
     {
         base.Start();
-
-        _oc = GetComponent<OrcController>();
     }
 
     public override void Dead()
     {
         base.Dead();
+    }
 
-        _oc.ResetPath();
+    public override void Hitted(float damage)
+    {
+        base.Hitted(damage);
     }
 
     #region animation event
     public override void EnableHitBox(int active)
     {
-        bool flag = active == 1 ? true : false;
-        _oc.weapon.EnableHitBox(flag);
+        base.EnableHitBox(active);
     }
     #endregion
 }

@@ -11,6 +11,8 @@ public class Inventory : MonoBehaviour
     public int maxAmount;
     public int currentAmount;
 
+    public List<ItemData> equipmentData;
+
     private WeaponHolder _weaponHolder;
 
     private void Start()

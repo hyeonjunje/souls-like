@@ -8,23 +8,7 @@ public class BossWall : MonoBehaviour, IInteractable
 {
     public EBossWallType bossWallType;
 
-    public Action bossEnterAction;
-
-    private bool _isBossFight;
-    public bool isBossFight
-    {
-        get { return _isBossFight; }
-        set
-        {
-            _isBossFight = value;
-
-            if(_isBossFight)
-            {
-                bossEnterAction?.Invoke();
-            }
-
-        }
-    }
+    private bool _isBossFight = false;
 
     private BoxCollider _col;
 
@@ -35,7 +19,7 @@ public class BossWall : MonoBehaviour, IInteractable
 
     public void EnterInteractZone()
     {
-        if (isBossFight)
+        if (_isBossFight)
             return;
 
         Debug.Log("E를 누르면 들어갑니다.");
@@ -43,7 +27,7 @@ public class BossWall : MonoBehaviour, IInteractable
 
     public void ExitInteractZone()
     {
-        if (isBossFight)
+        if (_isBossFight)
             return;
     }
 
@@ -54,12 +38,15 @@ public class BossWall : MonoBehaviour, IInteractable
 
     public Vector3 GetPos()
     {
-        return transform.position;
+        if (_isBossFight)
+            return transform.position;
+        else
+            return Vector3.zero;
     }
 
     public void Interact()
     {
-        if (isBossFight)
+        if (_isBossFight)
             return;
 
         EnterWall();
@@ -102,11 +89,16 @@ public class BossWall : MonoBehaviour, IInteractable
             if (timer >= 2f)
                 break;
 
+            if(timer >= 1.5f)
+            {
+                GetComponentInParent<BossEvent>().StartBossFightAction.Invoke();
+            }
+
             yield return null;
         }
 
         _col.enabled = true;
         pc.isControllable = true;
-        isBossFight = true;
+        _isBossFight = true;
     }
 }

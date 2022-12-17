@@ -29,8 +29,11 @@ public class ChaseState : AIState
     {
         if (Vector3.Distance(enemy.offset.position, enemy.currentTarget.position) > enemy._fov.viewRaduis)
         {
-            enemy.currentTarget = null;
-            return idleState;
+            if (enemy._enemy.enemyType == Define.EEnemyType.Common)
+            {
+                enemy.currentTarget = null;
+                return idleState;
+            }
         }
 
         if (enemy.currentTarget == null)

@@ -205,6 +205,18 @@ public class Player : LivingEntity
         ChangeHp(30);
     }
 
+
+    public void RestInBonfire()
+    {
+        currentHp = maxHp;
+        currentStamina = maxStamina;
+
+        _inventory.currentAmount = _inventory.maxAmount;
+        _playerUI.UtillSlotAmount(_inventory.currentAmount);
+
+        recoveryParticleSystem.Play();
+    }
+
     #region override
     public override void Hitted(float damage)
     {

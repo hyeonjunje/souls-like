@@ -162,7 +162,7 @@ public class Enemy : LivingEntity
 
         if(enemyType != Define.EEnemyType.Common)
         {
-            GetComponent<Boss>()?.DeadEvent();
+            GetComponentInParent<BossEvent>()?.EndBossFightAction.Invoke();
         }
     }
 

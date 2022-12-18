@@ -39,8 +39,11 @@ public class ChaseState : AIState
         if (enemy.currentTarget == null)
             return idleState;
 
+        Vector3 dir1 = enemy.currentTarget.position - enemy.offset.position;
+        dir1.y = 0.0f;
+
         if (Vector3.Distance(enemy.offset.position, enemy.currentTarget.position) < enemy.attackRange
-            && Vector3.Angle(enemy.currentTarget.position - enemy.offset.position, enemy.offset.forward) < 5.0f)
+            && Vector3.Angle(dir1, enemy.offset.forward) < enemy.attackAngle)
             return attackState;
         else
         {
@@ -54,7 +57,7 @@ public class ChaseState : AIState
             }
 
             // È¸Àü
-            else if(Vector3.Angle(enemy.currentTarget.position - enemy.offset.position, enemy.offset.forward) > 5.0f)
+            else if(Vector3.Angle(enemy.currentTarget.position - enemy.offset.position, enemy.offset.forward) > enemy.attackAngle)
             {
                 if (enemy._agent.enabled)
                     enemy._agent.enabled = false;

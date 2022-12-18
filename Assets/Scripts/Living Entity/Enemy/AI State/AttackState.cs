@@ -34,7 +34,7 @@ public class AttackState : AIState
         }
 
         if (Vector3.Distance(enemy.offset.position, enemy.currentTarget.position) > enemy.attackRange
-            && Vector3.Angle(enemy.currentTarget.position - enemy.offset.position, enemy.offset.forward) > 5.0f)
+            && Vector3.Angle(enemy.currentTarget.position - enemy.offset.position, enemy.offset.forward) > enemy.attackAngle)
         {
             return ChaseState;
         }

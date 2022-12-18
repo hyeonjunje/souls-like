@@ -7,6 +7,11 @@ public class WeaponHolder : MonoBehaviour
     [SerializeField] private Transform[] holdParts;
     [SerializeField] private Transform[] equipParts;
 
+    public Transform[] ep
+    {
+        get { return equipParts; }
+    }
+
     public void HoldWeapon(BaseWeapon weapon)
     {
         if (weapon.holdParts == Define.EHoldParts.None)

@@ -37,7 +37,7 @@ public abstract class BaseWeapon : MonoBehaviour
             _player.op -= op;
     }
 
-    public void EnableHitBox(bool active)
+    public virtual void EnableHitBox(bool active)
     {
         hitbox.EnableHitBox(active);
     }

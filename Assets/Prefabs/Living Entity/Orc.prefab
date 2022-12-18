@@ -5850,6 +5850,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackRange: 2
+  attackAngle: 5
   attackCoolTime: 3
   hittedCoolTime: 0.5
   detachTime: 2
@@ -5946,6 +5947,8 @@ MonoBehaviour:
   drop: {fileID: 8074767533995993967, guid: 008b500ce86c8604081ab3f331ea9ea2, type: 3}
   hpBar: {fileID: 5109923189606384460}
   _targetMark: {fileID: 4993771520554446751}
+  op: 0
+  dp: 0
 --- !u!114 &8749539561632998194
 MonoBehaviour:
   m_ObjectHideFlags: 0

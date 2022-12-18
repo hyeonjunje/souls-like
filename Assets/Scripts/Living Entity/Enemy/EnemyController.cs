@@ -6,6 +6,7 @@ using UnityEngine.AI;
 public abstract class EnemyController : MonoBehaviour
 {
     public float attackRange;
+    public float attackAngle = 5f;
     public float attackCoolTime;
     public float hittedCoolTime;
     public float detachTime;

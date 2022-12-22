@@ -13,8 +13,8 @@ public class HittedState : AIState
 
     public override void Enter(EnemyController enemy)
     {
-        if (enemy._fov.detectedPlayer != null && enemy.currentTarget == null)
-            enemy.currentTarget = enemy._fov.detectedPlayer;
+        if (enemy.detachedTarget != null && enemy.currentTarget == null)
+            enemy.currentTarget = enemy.detachedTarget;
 
         if (enemy._enemy.enemyType == Define.EEnemyType.Boss)
             return;

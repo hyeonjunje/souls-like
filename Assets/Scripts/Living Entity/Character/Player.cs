@@ -133,8 +133,6 @@ public class Player : LivingEntity
 
     private void Update()
     {
-        Debug.Log("공격력 : " + op + " 방어력 : " + dp);
-
         if (isDead)
             return;
 

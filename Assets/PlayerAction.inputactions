@@ -15,7 +15,7 @@
                 },
                 {
                     "name": "Look",
-                    "type": "Value",
+                    "type": "PassThrough",
                     "id": "c6d8e5f2-3424-4082-8486-9f2fbd674786",
                     "expectedControlType": "Vector2",
                     "processors": "",
@@ -169,7 +169,7 @@
                 {
                     "name": "",
                     "id": "90d5af13-19e1-485d-981e-c6bd350657c8",
-                    "path": "<Pointer>/delta",
+                    "path": "<Mouse>/delta",
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",

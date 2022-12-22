@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class InputController : MonoBehaviour
 {
+    public bool lockOnFlag;
+
     [Header("Character Input Values")]
     public Vector2 move;
     public Vector2 look;
@@ -19,10 +21,29 @@ public class InputController : MonoBehaviour
         {
             _wheelValue = value;
 
-            if (_wheelValue > 0)
-                _pc.ChangeTarget(true);
-            else if(_wheelValue < 0)
-                _pc.ChangeTarget(false);
+            if(lockOnFlag)
+            {
+                if (_wheelValue > 0)
+                {
+                    cameraHandler.HandleLockOn();
+                    if (cameraHandler.rightLockTarget != null)
+                    {
+                        cameraHandler.EndLockOn();
+                        cameraHandler.currentLockOnTarget = cameraHandler.rightLockTarget;
+                        cameraHandler.StartLockOn();
+                    }
+                }
+                else if (_wheelValue < 0)
+                {
+                    cameraHandler.HandleLockOn();
+                    if (cameraHandler.leftLockTarget != null)
+                    {
+                        cameraHandler.EndLockOn();
+                        cameraHandler.currentLockOnTarget = cameraHandler.leftLockTarget;
+                        cameraHandler.StartLockOn();
+                    }
+                }
+            }
         }
     }
 
@@ -36,7 +57,31 @@ public class InputController : MonoBehaviour
             _isLockPressed = value;
 
             if (_isLockPressed)
-                _pc.LockOnOff();
+            {
+                if (lockOnFlag)
+                {
+                    lockOnFlag = false;
+                    cameraHandler.EndLockOn();
+                    cameraHandler.ClearLockOnTargets();
+                }
+                else
+                {
+                    cameraHandler.ClearLockOnTargets();
+                    cameraHandler.HandleLockOn();
+
+                    if(cameraHandler.nearestLockOnTarget != null)
+                    {
+                        cameraHandler.currentLockOnTarget = cameraHandler.nearestLockOnTarget;
+                        lockOnFlag = true;
+
+                        _pc.ActiveTargetAnim(lockOnFlag);
+
+                        cameraHandler.StartLockOn();
+                    }
+                }
+                _pc.ActiveTargetAnim(lockOnFlag);
+            }
+
         }
     }
 
@@ -117,12 +162,25 @@ public class InputController : MonoBehaviour
     // connect
     private PlayerController _pc;
     private Player _player;
-
+    private CameraHandler cameraHandler;
 
     private void Awake()
     {
         _pc = GetComponent<PlayerController>();
         _player = GetComponent<Player>();
+
+        cameraHandler = CameraHandler.instance;
+    }
+
+    private void LateUpdate()
+    {
+        float delta = Time.deltaTime;
+
+        if(cameraHandler != null)
+        {
+            cameraHandler.FollowTarget(delta);
+            cameraHandler.HandleCameraRotation(delta, look.x, look.y);
+        }
     }
 
 

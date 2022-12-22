@@ -4,6 +4,8 @@ using UnityEngine;
 
 public abstract class LivingEntity : MonoBehaviour
 {
+    public Transform lockOnTransform;
+
     protected Animator _animator;
 
     protected readonly int _hashIsHitted = Animator.StringToHash("IsHitted");

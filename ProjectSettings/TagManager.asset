@@ -6,6 +6,7 @@ TagManager:
   tags:
   - CinemachineTarget
   - Target
+  - Projectile
   layers:
   - Default
   - TransparentFX
@@ -23,11 +24,11 @@ TagManager:
   - 
   - 
   - Hitbox
-  - 
+  - Hitable
   - Interactive
   - 
   - 
-  - 
+  - LockOn
   - 
   - 
   - 

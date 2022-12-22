@@ -16,7 +16,7 @@ public class BossEvent : MonoBehaviour
 
     public void Awake()
     {
-        _target = GameObject.Find("PlayerTarget").transform;
+        _target = GameObject.Find("Player").transform;
 
         // enterance로 들어갈때
         StartBossFightAction += () => StartBossFight();
@@ -24,7 +24,8 @@ public class BossEvent : MonoBehaviour
         // 보스 해치울때
         EndBossFightAction += () => EndBossFight();
 
-        bonfire.isActive = false;
+        if(bonfire != null)
+            bonfire.isActive = false;
     }
 
 
@@ -38,10 +39,14 @@ public class BossEvent : MonoBehaviour
 
     private void EndBossFight()
     {
-        bonfire.ActiveBonfire();
+        if(bonfire != null)
+            bonfire.ActiveBonfire();
 
-        enterance.gameObject.SetActive(false);
-        exit.gameObject.SetActive(false);
+        if (enterance != null)
+            enterance.gameObject.SetActive(false);
+
+        if(exit != null)
+            exit.gameObject.SetActive(false);
 
         WorldUIController.instance.EndFightBoss();
     }

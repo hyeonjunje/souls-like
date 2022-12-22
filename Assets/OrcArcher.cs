@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OrcArcher : Orc
+public class OrcArcher : Enemy
 {
     public float arrowSpeed = 20.0f;
 

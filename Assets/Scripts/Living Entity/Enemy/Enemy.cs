@@ -20,10 +20,10 @@ public class Enemy : LivingEntity
 
     [Header("UI")]
     public Image hpBar;
-
-    [SerializeField] private TargetMark _targetMark;
+    public GameObject hpCanvas;
 
     private PlayerController _pc;
+    private InputController _ic;
     private EnemyController _ec;
 
     private float _currentHp;
@@ -63,6 +63,7 @@ public class Enemy : LivingEntity
 
         _pc = GameObject.FindObjectOfType<PlayerController>();
         _ec = GetComponent<EnemyController>();
+        _ic = GameObject.FindObjectOfType<InputController>();
 
         if (enemyType == Define.EEnemyType.Common)
             currentHp = maxHp;
@@ -86,10 +87,6 @@ public class Enemy : LivingEntity
         }
     }
 
-    public void SetTargetActive(bool active)
-    {
-        _targetMark.SetTargetActive(active);
-    }
 
     public void SetHp(float value)
     {
@@ -123,14 +120,16 @@ public class Enemy : LivingEntity
         if (isDead)
             return;
 
+        if(enemyType != EEnemyType.Boss)
+            _ec.Hitted();
+
+
         if (enemyType != EEnemyType.Common)
         {
             if (_coShowDamageText != null)
                 StopCoroutine(_coShowDamageText);
             _coShowDamageText = StartCoroutine(CoShowDamageText(damage));
         }
-
-        _ec.Hitted();
     }
 
     IEnumerator CoShowDamageText(float damage)
@@ -155,12 +154,17 @@ public class Enemy : LivingEntity
             dropObject.item = dropItems[Random.Range(0, dropItems.Length)];
         }
 
-        _targetMark.gameObject.layer = LayerMask.NameToLayer("DeadBody");
+        gameObject.layer = LayerMask.NameToLayer("DeadBody");
 
-        if (_pc._currentTarget == _targetMark.transform)
-            _pc.SetTarget(null);
+        if (_ic.lockOnFlag)
+        {
+            _ic.lockOnFlag = false;
+            CameraHandler.instance.EndLockOn();
+            CameraHandler.instance.ClearLockOnTargets();
+            _pc.ActiveTargetAnim(_ic.lockOnFlag);
+        }
 
-        if(enemyType != Define.EEnemyType.Common)
+        if (enemyType != Define.EEnemyType.Common)
         {
             GetComponentInParent<BossEvent>()?.EndBossFightAction.Invoke();
         }

@@ -14,3 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _skillName: "\uC62C\uB824\uCE58\uAE30"
   _rate: 1.4
+  _maxRange: 5
+  _minRange: 0
+  _coolTime: 2

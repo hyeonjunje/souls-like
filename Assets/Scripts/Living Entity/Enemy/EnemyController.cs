@@ -9,13 +9,13 @@ public abstract class EnemyController : MonoBehaviour
     public float attackAngle = 5f;
     public float attackCoolTime;
     public float hittedCoolTime;
-    public float detachTime;
+
+    [Header("FOV")]
+    public float viewRaduis;
+    public float viewAngle;
 
     public float rotationSpeed;
 
-    public Transform offset;
-
-    public FieldOfView _fov { get; private set; }
     public NavMeshAgent _agent { get; private set; }
     public Animator _animator { get; private set; }
     public Enemy _enemy { get; private set; }
@@ -27,6 +27,7 @@ public abstract class EnemyController : MonoBehaviour
     public AIState hittedState;
 
     public Transform currentTarget;
+    public Transform detachedTarget;
 
 
     public int maxCombo = 0;
@@ -61,7 +62,6 @@ public abstract class EnemyController : MonoBehaviour
 
     protected virtual void Start()
     {
-        _fov = GetComponent<FieldOfView>();
         _animator = GetComponent<Animator>();
         _agent = GetComponent<NavMeshAgent>();
         _weaponHolder = GetComponent<WeaponHolder>();

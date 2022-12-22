@@ -9,6 +9,8 @@ public class Hitbox : MonoBehaviour
     // connect
     private BoxCollider _bc;
 
+    private List<LivingEntity> charactersDamagedDuringThisCalculation = new List<LivingEntity>();
+
     private void Start()
     {
         _bc = GetComponent<BoxCollider>();
@@ -18,14 +20,34 @@ public class Hitbox : MonoBehaviour
     public void EnableHitBox(bool active)
     {
         _bc.enabled = active;
+
+        if (!active)
+        {
+            if (charactersDamagedDuringThisCalculation.Count > 0)
+                charactersDamagedDuringThisCalculation.Clear();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Target")
+        if (gameObject.tag == "Projectile" && other.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            Debug.Log("¿Ã∞≈«‘ : " + other.name);
-            other.GetComponent<TargetMark>().livingEntity.Hitted(currentDamage);
+            Destroy(gameObject);
+        }
+
+        if (other.gameObject.layer == LayerMask.NameToLayer("Hitable"))
+        {
+            LivingEntity character = other.GetComponentInParent<LivingEntity>();
+
+            if (character != null)
+            {
+                if (charactersDamagedDuringThisCalculation.Contains(character))
+                    return;
+
+                charactersDamagedDuringThisCalculation.Add(character);
+
+                character.Hitted(currentDamage);
+            }
         }
     }
 }

@@ -14,10 +14,6 @@ public class Enemy : LivingEntity
     [Tooltip("Amount of stamina restored per second")]
     public float recoveryHpAmount = 2.0f;
 
-    [Header("Drop Item")]
-    public ItemData[] dropItems;
-    public DropItem drop;
-
     [Header("UI")]
     public Image hpBar;
     public GameObject hpCanvas;
@@ -147,12 +143,6 @@ public class Enemy : LivingEntity
     public override void Dead()
     {
         base.Dead();
-
-        if(dropItems.Length != 0)
-        {
-            DropItem dropObject = Instantiate(drop, transform.position + Vector3.up, Quaternion.identity);
-            dropObject.item = dropItems[Random.Range(0, dropItems.Length)];
-        }
 
         gameObject.layer = LayerMask.NameToLayer("DeadBody");
 

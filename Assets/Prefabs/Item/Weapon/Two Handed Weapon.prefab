@@ -54,6 +54,9 @@ MonoBehaviour:
   offsetPos: {x: -0.016, y: -0.046, z: 0}
   offsetRot: {x: -13.377, y: 4.692, z: -19.533}
   hitbox: {fileID: 4195051617492561742}
+  closeRangeSkillDatas: []
+  middleRangeSkillDatas: []
+  longRangeSKillDatas: []
   skillDatas:
   - {fileID: 11400000, guid: f311b1b95f8270449b588f23b60ee148, type: 2}
   - {fileID: 11400000, guid: ab3a706e08a623b47aa1d02c1f9395c6, type: 2}

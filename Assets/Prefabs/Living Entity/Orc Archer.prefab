@@ -6050,7 +6050,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lockOnTransform: {fileID: 2021955659416071039}
   enemyType: 0
-  maxHp: 100
+  maxHp: 30
   recoveryHpCoolTime: 10
   recoveryHpAmount: 2
   dropItems: []

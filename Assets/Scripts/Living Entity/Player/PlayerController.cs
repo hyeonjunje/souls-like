@@ -159,7 +159,6 @@ public class PlayerController : MonoBehaviour
         _rollTimer = roll_lastFrame.time;
 
         _playerUI.SetWeaponSlot(_inventory.myWeaponsData[0], 0);
-        _playerUI.SetUtillSlot(_inventory.utilItem, _inventory.maxAmount);
     }
 
     private void Update()
@@ -391,6 +390,18 @@ public class PlayerController : MonoBehaviour
             _playerUI.SetWeaponSlot(_inventory.myWeaponsData[slot], slot);
         }
     }
+
+    public void ChangeUtilItem(int slot)
+    {
+        //slot = slot - 1;
+        if (_inventory.myUtilItems.Count > slot && _inventory.myUtilItems[slot] != null && _inventory.currentUtilItem != _inventory.myUtilItems[slot])
+        {
+            _inventory.currentUtilItem = _inventory.myUtilItems[slot];
+            _inventory.currentUtilSlot = slot;
+            _playerUI.SetUtillSlot(_inventory.currentUtilItem, _inventory.utilItemCount[slot]);
+        }
+    }
+
 
     public void ActLeftHand(bool isLeftHand)
     {

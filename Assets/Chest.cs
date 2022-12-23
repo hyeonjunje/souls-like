@@ -18,13 +18,13 @@ public class Chest : MonoBehaviour, IInteractable
     public void EnterInteractZone()
     {
         if (isActive)
-            Debug.Log("E를 누르면 쉽니다.");
+            UIController.instance.ShowInteractiveEnterText("열기");
     }
 
     public void ExitInteractZone()
     {
         if (isActive)
-            Debug.Log("나갑니다.");
+            UIController.instance.HideInteractiveExitText();
     }
 
     public Vector3 GetPos()
@@ -39,6 +39,7 @@ public class Chest : MonoBehaviour, IInteractable
     {
         if (isActive)
         {
+            UIController.instance.HideInteractiveExitText();
             _pc.AnimationGathering();
             _chestCap.DOLocalRotate(new Vector3(0, 0, 0), 2);
             isActive = false;

@@ -193,14 +193,31 @@ public class Player : LivingEntity
 
     public void UseItem()
     {
-        if (_inventory.currentAmount <= 0 || currentHp == maxHp)
-            return;
+        int amount = _inventory.utilItemCount[_inventory.currentUtilSlot];
 
-        _inventory.currentAmount--;
-        _playerUI.UtillSlotAmount(_inventory.currentAmount);
+        if (_inventory.currentUtilItem.itemName == "Æ÷¼Ç")
+        {
+            if (amount <= 0 || currentHp == maxHp)
+                return;
 
+            recoveryParticleSystem.Play();
+            ChangeHp(30);
+        }
+/*        else if(_inventory.currentUtilItem.itemName == "¿­¼è")
+        {
+            if (amount <= 0)
+                return;
+            Debug.Log("¿­¼è »ç¿ë");
+        }*/
+
+        amount = --_inventory.utilItemCount[_inventory.currentUtilSlot];
+        _playerUI.UtillSlotAmount(amount);
+    }
+
+    public void UsePotion(float amount)
+    {
         recoveryParticleSystem.Play();
-        ChangeHp(30);
+        ChangeHp(amount);
     }
 
 
@@ -209,8 +226,13 @@ public class Player : LivingEntity
         currentHp = maxHp;
         currentStamina = maxStamina;
 
-        _inventory.currentAmount = _inventory.maxAmount;
-        _playerUI.UtillSlotAmount(_inventory.currentAmount);
+        for(int i = 0; i < _inventory.myUtilItems.Count; i++)
+        {
+            if(_inventory.myUtilItems[i].itemName == "Æ÷¼Ç")
+            {
+                _inventory.utilItemCount[i] = 3;
+            }
+        }
 
         recoveryParticleSystem.Play();
     }

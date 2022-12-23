@@ -19,6 +19,14 @@ public class UIController : MonoBehaviour
     public Image itemImage;
     public Text itemName;
 
+    [Header("Interactive UI")]
+    public GameObject interactiveUI;
+    public Text interactiveText;
+
+    [Header("Info UI")]
+    public CanvasGroup infoUI;
+    public Text infoText;
+
     Sequence seq;
 
     public void ShowLootItemUI(ItemData item)
@@ -36,5 +44,35 @@ public class UIController : MonoBehaviour
         .Append(itemLootUI.DOFade(1, 2f))
         .Append(itemLootUI.DOFade(0, 2f))
         .AppendCallback(() => itemLootUI.gameObject.SetActive(false));
+    }
+
+
+    public void ShowInteractiveEnterText(string contents)
+    {
+        interactiveUI.SetActive(true);
+        interactiveText.text = "E : " + contents;
+    }
+
+
+    public void HideInteractiveExitText()
+    {
+        interactiveUI.SetActive(false);
+    }
+
+
+    public void ShowInfoUI(string text)
+    {
+        seq.Kill();
+
+        seq = DOTween.Sequence().AppendCallback(() =>
+        {
+            itemLootUI.alpha = 0;
+
+            infoUI.gameObject.SetActive(true);
+            infoText.text = text;
+        })
+        .Append(itemLootUI.DOFade(1, 2f))
+        .Append(itemLootUI.DOFade(0, 2f))
+        .AppendCallback(() => infoUI.gameObject.SetActive(false));
     }
 }

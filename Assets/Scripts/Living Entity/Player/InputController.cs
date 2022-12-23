@@ -163,6 +163,7 @@ public class InputController : MonoBehaviour
     private PlayerController _pc;
     private Player _player;
     private CameraHandler cameraHandler;
+    private Inventory _inventory;
 
     private void Awake()
     {
@@ -170,6 +171,8 @@ public class InputController : MonoBehaviour
         _player = GetComponent<Player>();
 
         cameraHandler = CameraHandler.instance;
+
+        _inventory = GetComponentInChildren<Inventory>();
     }
 
     private void LateUpdate()
@@ -259,5 +262,39 @@ public class InputController : MonoBehaviour
     void OnUse(InputValue value)
     {
         isUse = value.isPressed;
+    }
+
+
+    void OnUpArrow(InputValue value)
+    {
+        bool result = value.isPressed;
+        Debug.Log(result);
+        if (result)
+        {
+            if (_inventory.myUtilItems.Count <= 1)
+                return;
+
+            int index = _inventory.currentUtilSlot + 1;
+            if (index >= _inventory.myUtilItems.Count)
+                index = 0;
+            _pc.ChangeUtilItem(index);
+        }
+    }
+
+
+    void OnDownArrow(InputValue value)
+    {
+        bool result = value.isPressed;
+        Debug.Log(result);
+        if(result)
+        {
+            if (_inventory.myUtilItems.Count <= 1)
+                return;
+
+            int index = _inventory.currentUtilSlot - 1;
+            if (index < 0)
+                index = _inventory.myUtilItems.Count - 1;
+            _pc.ChangeUtilItem(index);
+        }
     }
 }

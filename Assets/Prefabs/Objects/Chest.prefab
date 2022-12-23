@@ -225,6 +225,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _chestCap: {fileID: 626582472492501950}
+  itemData: {fileID: 0}
   isActive: 1
 --- !u!65 &791166179
 BoxCollider:

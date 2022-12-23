@@ -24,10 +24,17 @@ public class PlayerUI : MonoBehaviour
     }
 
 
-    public void SetUtillSlot(ItemData item, int maxValue)
+    public void SetUtillSlot(ItemData item, int currentValue)
     {
         utillImage.sprite = item.itemSprite;
-        amountText.text = maxValue.ToString(); ;
+        amountText.text = currentValue.ToString();
+
+        if (currentValue <= 0)
+        {
+            Color c = utillImage.color;
+            c.a = 0.5f;
+            utillImage.color = c;
+        }
     }
 
 

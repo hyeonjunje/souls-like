@@ -19,16 +19,24 @@ public class BossWall : MonoBehaviour, IInteractable
 
     public void EnterInteractZone()
     {
-        if (_isBossFight)
+        if (bossWallType == EBossWallType.Exit)
             return;
 
-        Debug.Log("E를 누르면 들어갑니다.");
+        if (_isBossFight)
+            return;
+            
+        UIController.instance.ShowInteractiveEnterText("들어가기");
     }
 
     public void ExitInteractZone()
     {
+        if (bossWallType == EBossWallType.Exit)
+            return;
+
         if (_isBossFight)
             return;
+
+        UIController.instance.HideInteractiveExitText();
     }
 
     public Vector3 GetPos()
@@ -53,6 +61,7 @@ public class BossWall : MonoBehaviour, IInteractable
         // 입구일 때
         if(bossWallType == EBossWallType.Enterance)
         {
+            UIController.instance.HideInteractiveExitText();
             StartCoroutine(CoEnterWall());
         }
         // 출구일 때

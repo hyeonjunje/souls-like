@@ -20,9 +20,12 @@ public class Inventory : MonoBehaviour
     public List<BaseWeapon> myWeapons;
     public List<ItemData> myWeaponsData;
 
-    public ItemData utilItem;
-    public int maxAmount;
-    public int currentAmount;
+    public List<ItemData> myUtilItems;
+    public ItemData currentUtilItem;
+    public List<int> utilItemCount;
+    public int currentUtilSlot;
+
+    public bool hasKey = false;
 
     public ItemData[] equipmentData = new ItemData[(int)EEquipmentType.Size];
 
@@ -32,12 +35,12 @@ public class Inventory : MonoBehaviour
     public List<BaseEquipment> allEquipment;
 
     private WeaponHolder _weaponHolder;
+    private PlayerUI _playerUI;
 
     private void Start()
     {
         _weaponHolder = GameObject.Find("Player").GetComponent<WeaponHolder>();
-
-        currentAmount = maxAmount;
+        _playerUI = FindObjectOfType<PlayerUI>();
 
         for(int i = 0; i < currentEquipment.Length; i++)
         {
@@ -63,6 +66,7 @@ public class Inventory : MonoBehaviour
                 AddEquipment(item);
                 break;
             case Define.EItemType.Utils:
+                AddUtilItem(item);
                 break;
         }
     }
@@ -130,6 +134,39 @@ public class Inventory : MonoBehaviour
             currentEquipment[(int)equip.equipmentType].gameObject.SetActive(true);
             currentEquipment[(int)equip.equipmentType].Equip();
         }
+    }
+
+
+    private void AddUtilItem(ItemData item)
+    {
+        int maxCount = 0;
+
+        if (item.itemName == "Æ÷¼Ç")
+        {
+            myUtilItems.Add(item);
+            maxCount = 3;
+            //_playerUI.SetUtillSlot(item, 3);
+            utilItemCount.Add(3);
+
+            _playerUI.utillImage.gameObject.SetActive(true);
+            currentUtilItem = item;
+            _playerUI.SetUtillSlot(item, maxCount);
+        }
+        else if (item.itemName == "¿­¼è")
+        {
+            hasKey = true;
+            /*maxCount = 1;
+            //_playerUI.SetUtillSlot(item, 1);
+            utilItemCount.Add(1);*/
+        }
+
+
+/*        if (myUtilItems.Count == 1)
+        {
+            _playerUI.utillImage.gameObject.SetActive(true);
+            currentUtilItem = item;
+            _playerUI.SetUtillSlot(item, maxCount);
+        }*/
     }
 
     private void UnEquip(BaseEquipment equip)

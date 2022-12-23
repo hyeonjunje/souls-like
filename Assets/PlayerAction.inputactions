@@ -108,6 +108,22 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "UpArrow",
+                    "type": "PassThrough",
+                    "id": "53f165e9-0717-4541-bd62-9d1496362e58",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "DownArrow",
+                    "type": "PassThrough",
+                    "id": "e753e498-9fc8-45be-a4ef-1b3de4bf498c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -295,6 +311,28 @@
                     "processors": "",
                     "groups": "PC",
                     "action": "Use",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "faef454d-a5c9-4586-aca6-30de75c9e593",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "UpArrow",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "97c05a00-8019-416a-a549-0457e8dc0cee",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "DownArrow",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

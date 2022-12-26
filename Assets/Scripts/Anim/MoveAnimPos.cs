@@ -28,7 +28,7 @@ public class MoveAnimPos : StateMachineBehaviour
     {
         timer += Time.deltaTime;
         float speed = moveCurve.Evaluate(timer);
-
+        target.position = new Vector3(target.position.x, animator.transform.position.y, target.position.z);
         animator.transform.position = Vector3.MoveTowards(animator.transform.position, target.position, speed * Time.deltaTime);
     }
 

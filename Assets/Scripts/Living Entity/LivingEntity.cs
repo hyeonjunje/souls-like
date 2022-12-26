@@ -7,6 +7,7 @@ public abstract class LivingEntity : MonoBehaviour
     public Transform lockOnTransform;
 
     protected Animator _animator;
+    protected CharacterSoundManager _characterSoundManager;
 
     protected readonly int _hashIsHitted = Animator.StringToHash("IsHitted");
     protected readonly int _hashIsDead = Animator.StringToHash("IsDead");
@@ -15,6 +16,7 @@ public abstract class LivingEntity : MonoBehaviour
     protected virtual void Start()
     {
         _animator = GetComponent<Animator>();
+        _characterSoundManager = GetComponent<CharacterSoundManager>();
     }
 
     public virtual void Hitted(float damage)

@@ -25,19 +25,11 @@ public class AttackState : AIState
             enemy._animator.SetTrigger(_hashIsAttack);
 
             int index = GetSkillData(enemy);
-            enemy._animator.SetInteger(_hashCombo, index);
-            enemy.weapon?.Use(index, enemy._enemy.op);
-/*            if (enemy._enemy.enemyType == Define.EEnemyType.Boss)
-            {
-                int index = GetSkillData(enemy);
+
+            if(enemy._enemy.enemyType == Define.EEnemyType.Boss)
                 enemy._animator.SetInteger(_hashCombo, index);
-                enemy.weapon?.Use(index, enemy._enemy.op);
-            }
-            else
-            {
-                enemy.weapon?.Use(enemy.currentCombo, enemy._enemy.op);
-                enemy.currentCombo = enemy.currentCombo + 1 == enemy.maxCombo ? 0 : enemy.currentCombo + 1;
-            }*/
+
+            enemy.weapon?.Use(index, enemy._enemy.op);
 
             _attackable = false;
         }

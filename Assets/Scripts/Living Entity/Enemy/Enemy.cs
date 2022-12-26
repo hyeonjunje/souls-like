@@ -20,7 +20,7 @@ public class Enemy : LivingEntity
 
     private PlayerController _pc;
     private InputController _ic;
-    private EnemyController _ec;
+    public EnemyController _ec;
 
     private float _currentHp;
     public float currentHp
@@ -104,6 +104,8 @@ public class Enemy : LivingEntity
     private Coroutine _coShowDamageText = null;
     public override void Hitted(float damage)
     {
+        _characterSoundManager.PlayRandomHitSound();
+
         damage -= dp;
         if (damage < 0)
             damage = 0;

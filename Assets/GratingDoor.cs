@@ -47,6 +47,8 @@ public class GratingDoor : MonoBehaviour, IInteractable
 
                 transform.DOLocalMoveY(transform.position.y + 10.0f, 3f);
                 isActive = true;
+
+                WorldSoundManager.instance.PlaySoundEffect(SE.DoorOpen);
             }
             else
             {

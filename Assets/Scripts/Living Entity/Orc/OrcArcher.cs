@@ -7,7 +7,6 @@ public class OrcArcher : Enemy
     public float arrowSpeed = 20.0f;
 
     [SerializeField] GameObject arrow;
-    EnemyController _ec;
     WeaponHolder _weaponHolder;
 
     private Transform arrowTransform;
@@ -15,7 +14,6 @@ public class OrcArcher : Enemy
     protected override void Start()
     {
         base.Start();
-        _ec = GetComponent<EnemyController>();
         _weaponHolder = GetComponent<WeaponHolder>();
     }
 

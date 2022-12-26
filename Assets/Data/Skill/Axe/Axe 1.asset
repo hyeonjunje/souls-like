@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Axe 1
   m_EditorClassIdentifier: 
   _skillName: "\uC810\uD504\uACF5\uACA9"
-  _rate: 1
+  _rate: 1.5
   _maxRange: 18
   _minRange: 10
-  _coolTime: 5
+  _coolTime: 3

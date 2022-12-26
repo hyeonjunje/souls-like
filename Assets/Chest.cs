@@ -44,7 +44,9 @@ public class Chest : MonoBehaviour, IInteractable
             _chestCap.DOLocalRotate(new Vector3(0, 0, 0), 2);
             isActive = false;
 
-            if(itemData == null)
+            WorldSoundManager.instance.PlaySoundEffect(SE.ChestOpen);
+
+            if (itemData == null)
             {
 
             }

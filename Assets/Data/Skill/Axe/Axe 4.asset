@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba7d55acc4aa49642ae0cd19161a72a8, type: 3}
   m_Name: Axe 4
   m_EditorClassIdentifier: 
-  _skillName: "\uAC80\uAE30 \uB0A0\uB9AC\uAE30"
-  _rate: 1
-  _maxRange: 30
+  _skillName: "\uBC14\uC704 \uB0A0\uB9AC\uAE30"
+  _rate: 1.2
+  _maxRange: 20
   _minRange: 10
   _coolTime: 3

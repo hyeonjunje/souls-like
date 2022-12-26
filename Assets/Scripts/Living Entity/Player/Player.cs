@@ -13,8 +13,9 @@ public class Player : LivingEntity
     public float maxStamina;
     public float recoveryStaminaCoolTime = 0.5f;
     [Tooltip("Amount of stamina restored per second")]
-    public float recoveryStaminaAmount = 5.0f;    
-    
+    public float recoveryStaminaAmount = 5.0f;
+    public float invincibilityTime = 0.3f;
+
 
     [Header("UI")]
     [SerializeField] private Image hpBar;
@@ -193,6 +194,9 @@ public class Player : LivingEntity
 
     public void UseItem()
     {
+        if (_inventory.currentUtilItem == null)
+            return;
+
         int amount = _inventory.utilItemCount[_inventory.currentUtilSlot];
 
         if (_inventory.currentUtilItem.itemName == "Æ÷¼Ç")
@@ -237,9 +241,25 @@ public class Player : LivingEntity
         recoveryParticleSystem.Play();
     }
 
+    private float invincibilityTimer = 0.0f;
+    private bool isInvincibility = false;
+
     #region override
     public override void Hitted(float damage)
     {
+        if(isInvincibility)
+        {
+            return;
+        }
+
+        isInvincibility = true;
+        DOTween.To(() => invincibilityTimer, x => invincibilityTimer = x, invincibilityTime, invincibilityTime)
+                .OnComplete(() =>
+                {
+                    isInvincibility = false;
+                    invincibilityTimer = 0.0f;
+                });
+
         damage -= dp;
         if (damage < 0)
             damage = 0;
@@ -266,6 +286,8 @@ public class Player : LivingEntity
                 return;
             }
         }
+
+        _characterSoundManager.PlayRandomHitSound();
 
         ChangeHp(-damage);
         if (isDead)

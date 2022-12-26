@@ -32,7 +32,7 @@ public class BossEvent : MonoBehaviour
     private void StartBossFight()
     {
         WorldUIController.instance.StartFightBoss(boss);
-
+        WorldSoundManager.instance.ActiveBossBGM(true);
         GetComponentInChildren<EnemyController>().currentTarget = _target;
     }
 
@@ -49,5 +49,6 @@ public class BossEvent : MonoBehaviour
             exit.gameObject.SetActive(false);
 
         WorldUIController.instance.EndFightBoss();
+        WorldSoundManager.instance.ActiveBossBGM(false);
     }
 }

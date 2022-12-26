@@ -57,7 +57,9 @@ public class Inventory : MonoBehaviour
 
     public void AddItem(ItemData item)
     {
-        switch(item.itemType)
+        WorldSoundManager.instance.PlaySoundEffect(SE.PickUpItem);
+
+        switch (item.itemType)
         {
             case Define.EItemType.Weapon:
                 AddWeapon(item);
@@ -155,18 +157,7 @@ public class Inventory : MonoBehaviour
         else if (item.itemName == "¿­¼è")
         {
             hasKey = true;
-            /*maxCount = 1;
-            //_playerUI.SetUtillSlot(item, 1);
-            utilItemCount.Add(1);*/
         }
-
-
-/*        if (myUtilItems.Count == 1)
-        {
-            _playerUI.utillImage.gameObject.SetActive(true);
-            currentUtilItem = item;
-            _playerUI.SetUtillSlot(item, maxCount);
-        }*/
     }
 
     private void UnEquip(BaseEquipment equip)

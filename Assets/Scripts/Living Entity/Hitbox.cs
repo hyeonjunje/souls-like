@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class Hitbox : MonoBehaviour
 {
+    public float defaultDamage;
+
     public float currentDamage { get; set; }
 
     // connect
-    private BoxCollider _bc;
+    private Collider _bc;
 
     private List<LivingEntity> charactersDamagedDuringThisCalculation = new List<LivingEntity>();
 
     private void Start()
     {
-        _bc = GetComponent<BoxCollider>();
+        _bc = GetComponent<Collider>();
     }
 
 
@@ -32,7 +34,18 @@ public class Hitbox : MonoBehaviour
     {
         if (gameObject.tag == "Projectile" && other.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            Destroy(gameObject);
+            if(other.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                Destroy(gameObject);
+            else
+                if (charactersDamagedDuringThisCalculation.Count > 0)
+                    charactersDamagedDuringThisCalculation.Clear();
+
+        }
+
+        if(gameObject.tag == "Particle")
+        {
+            if (charactersDamagedDuringThisCalculation.Count > 0)
+                charactersDamagedDuringThisCalculation.Clear();
         }
 
         if (other.gameObject.layer == LayerMask.NameToLayer("Hitable"))
@@ -43,6 +56,9 @@ public class Hitbox : MonoBehaviour
             {
                 if (charactersDamagedDuringThisCalculation.Contains(character))
                     return;
+
+                if (currentDamage == 0)
+                    currentDamage = defaultDamage;
 
                 charactersDamagedDuringThisCalculation.Add(character);
 

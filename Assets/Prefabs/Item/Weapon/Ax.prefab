@@ -189,9 +189,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1d2acf692889ced4fa75c280d84c6156, type: 2}
   - {fileID: 11400000, guid: 9e606145ad7dc5e4c9c6e625fb179203, type: 2}
   - {fileID: 11400000, guid: 18d73cd23aa7b5341a19b230719aa819, type: 2}
-  projectileSpeed: 10
-  projectile: {fileID: 2083083052826861740, guid: a1bafe675ddfe3f4b80a2b6688a42420, type: 3}
-  instantiateTransform: {fileID: 3515329437718197703}
 --- !u!1 &5244368117865468189
 GameObject:
   m_ObjectHideFlags: 0

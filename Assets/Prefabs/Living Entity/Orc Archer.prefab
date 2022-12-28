@@ -5833,6 +5833,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1f386d177efec4449ab57db78733547, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultDamage: 0
 --- !u!65 &7305953681574400806
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5957,7 +5958,7 @@ MonoBehaviour:
   hittedCoolTime: 0.5
   viewRaduis: 20
   viewAngle: 90
-  rotationSpeed: 3
+  rotationSpeed: 10
   currentState: {fileID: 0}
   initState: {fileID: 7404455329303428392}
   hittedState: {fileID: 3964760768827323016}

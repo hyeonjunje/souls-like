@@ -329,6 +329,9 @@ public class PlayerController : MonoBehaviour
     private Coroutine _coRoll;
     public void Roll()
     {
+        if (!this.enabled)
+            return;
+
         if (_isAct)
             return;
 

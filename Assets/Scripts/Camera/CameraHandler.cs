@@ -219,6 +219,8 @@ public class CameraHandler : MonoBehaviour
     {
         lockOnMark.gameObject.SetActive(true);
 
+        cameraPivotTransform.position += Vector3.up * 0.5f;
+
         Debug.Log(currentLockOnTarget.name);
 
         lockOnMark.SetParent(currentLockOnTarget, false);
@@ -236,6 +238,8 @@ public class CameraHandler : MonoBehaviour
     {
         lockOnMark.gameObject.SetActive(false);
         lockOnMark.SetParent(myTransform, false);
+
+        cameraPivotTransform.position += Vector3.down * 0.5f;
 
         Enemy enemy = currentLockOnTarget.GetComponentInParent<Enemy>();
         if (enemy.enemyType == Define.EEnemyType.Common)

@@ -4292,7 +4292,7 @@ GameObject:
   - component: {fileID: 6006915627976486355}
   - component: {fileID: 3814497198722822305}
   m_Layer: 10
-  m_Name: Orc Elder
+  m_Name: Orc Leader
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4477,7 +4477,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 903992c374f0ef54f99d3f4d46708b43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bossName: "\uC624\uD06C \uC871\uC7A5"
+  bossName: "\uC624\uD06C \uB300\uC7A5"
 --- !u!82 &6006915627976486355
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4697,6 +4697,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1f386d177efec4449ab57db78733547, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultDamage: 0
 --- !u!65 &5524384535899394380
 BoxCollider:
   m_ObjectHideFlags: 0

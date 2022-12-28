@@ -14,10 +14,6 @@ public abstract class BaseWeapon : MonoBehaviour
     public Vector3 offsetRot;
     public Hitbox hitbox;
 
-    public SkillData[] closeRangeSkillDatas;
-    public SkillData[] middleRangeSkillDatas;
-    public SkillData[] longRangeSKillDatas;
-
     public SkillData[] skillDatas;
 
     private Player _player;

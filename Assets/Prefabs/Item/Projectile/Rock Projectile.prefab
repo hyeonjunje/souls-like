@@ -109,6 +109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1f386d177efec4449ab57db78733547, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isKnockback: 0
   defaultDamage: 12
 --- !u!54 &641357559735733968
 Rigidbody:

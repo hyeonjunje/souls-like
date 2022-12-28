@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OrcElder : Enemy
+public class OrcLeader : Enemy
 {
     public float projectileSpeed;
     public Hitbox projectile;

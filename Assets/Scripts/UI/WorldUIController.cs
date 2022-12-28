@@ -33,8 +33,12 @@ public class WorldUIController : MonoBehaviour
     public void EndFightBoss()
     {
         bossUI.SetActive(false);
-        _currentBoss.enemy.hpBar = null;
 
-        _currentBoss = null;
+        if(_currentBoss != null)
+        {
+            _currentBoss.enemy.hpBar = null;
+
+            _currentBoss = null;
+        }
     }
 }

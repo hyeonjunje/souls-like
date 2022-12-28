@@ -18,18 +18,21 @@ public class GameLogicManager : MonoBehaviour
     [SerializeField] private Image gameOverPanel;
     [SerializeField] private Text youDied;
 
+    private EnemySpawner _enemySpawner;
+
     private Player _player;
     private Color _gameOverPanelColor;
     private Color _youDiedColor;
     private bool _readyToReStart = false;
 
-    public static Vector3 respawnPos = new Vector3(2, 0.5f, 0);
+    public bool isBossFight = false;
 
     private void Start()
     {
-        _player = GameObject.Find("Player").GetComponent<Player>();
+        _enemySpawner = FindObjectOfType<EnemySpawner>();
+        _enemySpawner.SpawnEnemy();
 
-        _player.transform.position = respawnPos;
+        _player = GameObject.Find("Player").GetComponent<Player>();
 
         Color tempColor = gameOverPanel.color;
 
@@ -53,13 +56,10 @@ public class GameLogicManager : MonoBehaviour
             gameOverPanel.color = _gameOverPanelColor;
             youDied.color = _youDiedColor;
         });
-        //_player.Revive();
     }
 
     public void GameOver()
     {
-        _player.GetComponent<PlayerController>().enabled = false;
-
         gameOverPanel.gameObject.SetActive(true);
         gameOverPanel.DOFade(0, 2f).From();
         youDied.DOFade(0, 4f).From().OnComplete(() => ReStart());
@@ -67,10 +67,7 @@ public class GameLogicManager : MonoBehaviour
 
     public void ReStart()
     {
-        SceneManager.LoadScene(0);
-
-
-        /*gameOverPanel.DOFade(1, 2f).OnStart(() =>
+        gameOverPanel.DOFade(1, 2f).OnStart(() =>
         {
             youDied.gameObject.SetActive(false);
         })
@@ -84,14 +81,19 @@ public class GameLogicManager : MonoBehaviour
                 gameOverPanel.color = _gameOverPanelColor;
                 youDied.color = _youDiedColor;
             });
-        });*/
+        });
     }
 
-/*    private void Respawn()
+    private void Respawn()
     {
-        // 지금은 임시, 나중에는 모닥불 같은거에서 부활해야 함
-        // 모든 적들도 초기화
+        // 최근 저장된 위치에서 부활
+        _player.transform.position = DataManager.instance.lastPosition;
+        _player.transform.rotation = DataManager.instance.lastRotation;
 
+        // 부활 애니메이션
         _player.Revive();
-    }*/
+
+        // 적 초기화
+        _enemySpawner.SpawnEnemy();
+    }
 }

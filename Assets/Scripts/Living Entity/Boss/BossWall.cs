@@ -8,8 +8,6 @@ public class BossWall : MonoBehaviour, IInteractable
 {
     public EBossWallType bossWallType;
 
-    private bool _isBossFight = false;
-
     private BoxCollider _col;
 
     private void Start()
@@ -22,7 +20,7 @@ public class BossWall : MonoBehaviour, IInteractable
         if (bossWallType == EBossWallType.Exit)
             return;
 
-        if (_isBossFight)
+        if (GameLogicManager.instance.isBossFight)
             return;
             
         UIController.instance.ShowInteractiveEnterText("들어가기");
@@ -33,7 +31,7 @@ public class BossWall : MonoBehaviour, IInteractable
         if (bossWallType == EBossWallType.Exit)
             return;
 
-        if (_isBossFight)
+        if (GameLogicManager.instance.isBossFight)
             return;
 
         UIController.instance.HideInteractiveExitText();
@@ -41,7 +39,7 @@ public class BossWall : MonoBehaviour, IInteractable
 
     public Vector3 GetPos()
     {
-        if (_isBossFight)
+        if (GameLogicManager.instance.isBossFight)
             return transform.position;
         else
             return Vector3.zero;
@@ -49,7 +47,7 @@ public class BossWall : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        if (_isBossFight)
+        if (GameLogicManager.instance.isBossFight)
             return;
 
         EnterWall();
@@ -103,6 +101,6 @@ public class BossWall : MonoBehaviour, IInteractable
 
         _col.enabled = true;
         pc.isControllable = true;
-        _isBossFight = true;
+        GameLogicManager.instance.isBossFight = true;
     }
 }

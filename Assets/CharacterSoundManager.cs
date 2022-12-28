@@ -28,7 +28,6 @@ public class CharacterSoundManager : MonoBehaviour
 
     public void PlayRandomFootprintSound()
     {
-        Debug.Log("½ÇÇàµÊ");
         potentialFootprintSounds = new List<AudioClip>();
 
         if (footprintSounds.Length == 1)

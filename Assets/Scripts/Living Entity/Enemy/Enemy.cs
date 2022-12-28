@@ -61,8 +61,8 @@ public class Enemy : LivingEntity
         _ec = GetComponent<EnemyController>();
         _ic = GameObject.FindObjectOfType<InputController>();
 
-        if (enemyType == Define.EEnemyType.Common)
-            currentHp = maxHp;
+        //if (enemyType == Define.EEnemyType.Common)
+        currentHp = maxHp;
 
         _hpCoolTimeTweener = DOTween.To(() => _hpRecoveryTimer, x => _hpRecoveryTimer = x, 0.0f, recoveryHpCoolTime).SetAutoKill(false).Pause();
     }

@@ -102,6 +102,7 @@ public class Player : LivingEntity
 
     // connect
     private PlayerController _pc;
+    private InputController _ic;
     [SerializeField] private PlayerUI _playerUI;
     private Inventory _inventory;
 
@@ -123,6 +124,7 @@ public class Player : LivingEntity
         base.Start();
 
         _pc = GetComponent<PlayerController>();
+        _ic = GetComponent<InputController>();
         _inventory = GetComponentInChildren<Inventory>();
 
         currentHp = maxHp;
@@ -194,6 +196,9 @@ public class Player : LivingEntity
 
     public void UseItem()
     {
+        if (isDead)
+            return;
+
         if (_inventory.currentUtilItem == null)
             return;
 
@@ -207,12 +212,6 @@ public class Player : LivingEntity
             recoveryParticleSystem.Play();
             ChangeHp(30);
         }
-/*        else if(_inventory.currentUtilItem.itemName == "¿­¼è")
-        {
-            if (amount <= 0)
-                return;
-            Debug.Log("¿­¼è »ç¿ë");
-        }*/
 
         amount = --_inventory.utilItemCount[_inventory.currentUtilSlot];
         _playerUI.UtillSlotAmount(amount);
@@ -235,6 +234,7 @@ public class Player : LivingEntity
             if(_inventory.myUtilItems[i].itemName == "Æ÷¼Ç")
             {
                 _inventory.utilItemCount[i] = 3;
+                _playerUI.UtillSlotAmount(3);
             }
         }
 
@@ -299,6 +299,20 @@ public class Player : LivingEntity
 
     public override void Dead()
     {
+        if (_ic.lockOnFlag)
+        {
+            _ic.lockOnFlag = false;
+            CameraHandler.instance.EndLockOn();
+            CameraHandler.instance.ClearLockOnTargets();
+            _pc.ActiveTargetAnim(_ic.lockOnFlag);
+        }
+
+        _pc.enabled = false;
+
+        GameLogicManager.instance.isBossFight = false;
+        WorldUIController.instance.EndFightBoss();
+        WorldSoundManager.instance.ActiveBossBGM(false);
+
         base.Dead();
 
         GameLogicManager.instance.GameOver();
@@ -312,6 +326,13 @@ public class Player : LivingEntity
         bool flag = active == 1 ? true : false;
         _pc.weapon.EnableHitBox(flag);
     }
+
+
+    public void EnablePlayerController()
+    {
+        _pc.enabled = true;
+    }
+
     #endregion
 
 

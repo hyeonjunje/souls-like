@@ -48,7 +48,9 @@ public class Bonfire : MonoBehaviour, IInteractable
         {
             UIController.instance.HideInteractiveExitText();
             _player.RestInBonfire();
-            Debug.Log("ÈÞ½Ä");
+
+            DataManager.instance.lastPosition = _player.transform.position;
+            DataManager.instance.lastRotation = _player.transform.rotation;
         }
     }
 

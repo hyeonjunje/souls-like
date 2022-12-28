@@ -124,6 +124,14 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Setting",
+                    "type": "PassThrough",
+                    "id": "559de598-3351-4a82-9246-9792daf70060",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -333,6 +341,17 @@
                     "processors": "",
                     "groups": "PC",
                     "action": "DownArrow",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b094a13e-cd25-46da-ad70-ccf1ae382bcb",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Setting",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -5,6 +5,7 @@ using System;
 
 public class BossEvent : MonoBehaviour
 {
+    public int bossNum;
     public Boss boss;
     public BossWall enterance, exit;
     public Bonfire bonfire;
@@ -58,5 +59,8 @@ public class BossEvent : MonoBehaviour
 
         WorldUIController.instance.EndFightBoss();
         WorldSoundManager.instance.ActiveBossBGM(false);
+
+        DataManager.instance.isClearBoss[bossNum] = true;
+        DataManager.instance.Save();
     }
 }

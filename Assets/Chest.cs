@@ -6,7 +6,7 @@ using DG.Tweening;
 public class Chest : MonoBehaviour, IInteractable
 {
     [SerializeField] private Transform _chestCap;
-    [SerializeField] private ItemData itemData;
+    public ItemData itemData;
     public bool isActive = true;
 
     PlayerController _pc;

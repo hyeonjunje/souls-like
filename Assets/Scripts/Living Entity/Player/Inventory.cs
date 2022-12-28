@@ -52,8 +52,29 @@ public class Inventory : MonoBehaviour
                 currentEquipment[i].Equip();
             }
         }
-    }
 
+        for (int i = 0; i < DataManager.instance.currentItem.Count; i++)
+        {
+            SetItem(DataManager.instance.currentItem[i]);
+        }
+    }
+    private void SetItem(ItemData item)
+    {
+        WorldSoundManager.instance.PlaySoundEffect(SE.PickUpItem);
+
+        switch (item.itemType)
+        {
+            case Define.EItemType.Weapon:
+                AddWeapon(item);
+                break;
+            case Define.EItemType.Equip:
+                AddEquipment(item);
+                break;
+            case Define.EItemType.Utils:
+                AddUtilItem(item);
+                break;
+        }
+    }
 
     public void AddItem(ItemData item)
     {
@@ -71,6 +92,8 @@ public class Inventory : MonoBehaviour
                 AddUtilItem(item);
                 break;
         }
+        DataManager.instance.currentItem.Add(item);
+        DataManager.instance.Save();
     }
 
     private void AddWeapon(ItemData item)

@@ -51,6 +51,8 @@ public class Bonfire : MonoBehaviour, IInteractable
 
             DataManager.instance.lastPosition = _player.transform.position;
             DataManager.instance.lastRotation = _player.transform.rotation;
+
+            DataManager.instance.Save();
         }
     }
 

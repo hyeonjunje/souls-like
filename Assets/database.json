@@ -1,0 +1,31 @@
+{
+    "clearCount": 0,
+    "deadCount": 0,
+    "lastPosition": {
+        "x": 22.00327491760254,
+        "y": -0.01985752582550049,
+        "z": -46.50837707519531
+    },
+    "lastRotation": {
+        "x": 0.0,
+        "y": 0.41520509123802187,
+        "z": 0.0,
+        "w": 0.9097278118133545
+    },
+    "isClearBoss": [
+        true,
+        false,
+        false
+    ],
+    "currentItem": [
+        {
+            "instanceID": 27936
+        },
+        {
+            "instanceID": 27930
+        },
+        {
+            "instanceID": 28014
+        }
+    ]
+}

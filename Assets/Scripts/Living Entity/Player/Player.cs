@@ -132,6 +132,14 @@ public class Player : LivingEntity
         currentStamina = maxStamina;
 
         _staimaCoolTimeTweener = DOTween.To(() => _staminaRecoveryTimer, x => _staminaRecoveryTimer = x, 0.0f, recoveryStaminaCoolTime).SetAutoKill(false).Pause();
+
+        transform.position = Vector3.zero;
+        transform.rotation = Quaternion.identity;
+
+        GameManager.instance.player = this;
+        GameManager.instance.ConnectPlayer();
+
+        Debug.Log(transform.position);
     }
 
 
@@ -332,6 +340,9 @@ public class Player : LivingEntity
         base.Dead();
 
         GameLogicManager.instance.GameOver();
+
+        DataManager.instance.deadCount++;
+        DataManager.instance.Save();
     }
 
     #endregion

@@ -162,7 +162,7 @@ public class InputController : MonoBehaviour
     // connect
     private PlayerController _pc;
     private Player _player;
-    private CameraHandler cameraHandler;
+    public CameraHandler cameraHandler;
     private Inventory _inventory;
 
     private void Awake()
@@ -170,7 +170,7 @@ public class InputController : MonoBehaviour
         _pc = GetComponent<PlayerController>();
         _player = GetComponent<Player>();
 
-        cameraHandler = CameraHandler.instance;
+        cameraHandler = FindObjectOfType<CameraHandler>();
 
         _inventory = GetComponentInChildren<Inventory>();
     }
@@ -179,7 +179,7 @@ public class InputController : MonoBehaviour
     {
         float delta = Time.deltaTime;
 
-        if(cameraHandler != null && _pc.isControllable)
+        if(cameraHandler != null && !_pc.isTimeline)
         {
             cameraHandler.FollowTarget(delta);
             cameraHandler.HandleCameraRotation(delta, look.x, look.y);
@@ -295,6 +295,16 @@ public class InputController : MonoBehaviour
             if (index < 0)
                 index = _inventory.myUtilItems.Count - 1;
             _pc.ChangeUtilItem(index);
+        }
+    }
+
+
+    void OnSetting(InputValue value)
+    {
+        Debug.Log(value.isPressed);
+        if(value.isPressed)
+        {
+            UIController.instance.ActiveSettingUI();
         }
     }
 }

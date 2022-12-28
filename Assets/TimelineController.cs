@@ -26,6 +26,6 @@ public class TimelineController : MonoBehaviour
     public void ReadyToGoMainMenuScene()
     {
         PlayerController pc = FindObjectOfType<PlayerController>();
-        pc.isEnding = true;
+        pc.isTimeline = true;
     }
 }

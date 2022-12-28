@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviour
     public bool isRoll => _isRoll;
     public bool isControllable = true;                                     // 보스방 입장같은 원격으로 transform을 조종할때는 조종 불가하게 하는 상태
 
-    public bool isEnding = false;
+    public bool isTimeline = false;
 
     // gravity
     private float gravityValue = -9.81f * 2;
@@ -144,11 +144,13 @@ public class PlayerController : MonoBehaviour
 
         _playerUI = GameObject.FindObjectOfType<PlayerUI>();
 
-        cameraHandler = CameraHandler.instance;
+        //cameraHandler = CameraHandler.instance;
     }
 
     private void Start()
     {
+        cameraHandler = CameraHandler.instance;
+
         weapon = _inventory.myWeapons[0];
 
         _moveSpeedTweener = DOTween.To(() => _currentSpeed, x => _currentSpeed = x, 0.0f, 0.0f).SetAutoKill(false).Pause();
@@ -265,6 +267,9 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                Debug.Log(transform.rotation);
+                Debug.Log(cameraHandler.transform.rotation);
+                Debug.Log(rotationSmoothTime);
                 Quaternion targetRotation = Quaternion.Slerp(transform.rotation, cameraHandler.transform.rotation, rotationSmoothTime);
                 transform.rotation = targetRotation;
             }
@@ -432,11 +437,13 @@ public class PlayerController : MonoBehaviour
 
     public void ActRightHand()
     {
-        if(isEnding)
+        if(isTimeline)
         {
             // 로비창으로 돌아가기
             Debug.Log("메인메뉴로 갑니다.");
-            isEnding = false;
+            isTimeline = false;
+
+            GameManager.instance.ReturnMainMenu();
         }
 
         if (!isControllable)

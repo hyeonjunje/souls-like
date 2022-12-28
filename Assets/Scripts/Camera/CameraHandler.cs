@@ -48,7 +48,8 @@ public class CameraHandler : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        if(instance == null)
+            instance = this;
         myTransform = transform;
         defaultPosition = cameraTransform.localPosition.z;
 

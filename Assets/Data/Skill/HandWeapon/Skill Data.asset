@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Skill Data
   m_EditorClassIdentifier: 
   _skillName: "\uD0C0\uACA9 1"
-  _rate: 50
+  _rate: 1
   _maxRange: 2
   _minRange: 0
   _coolTime: 0

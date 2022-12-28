@@ -179,7 +179,7 @@ public class InputController : MonoBehaviour
     {
         float delta = Time.deltaTime;
 
-        if(cameraHandler != null)
+        if(cameraHandler != null && _pc.isControllable)
         {
             cameraHandler.FollowTarget(delta);
             cameraHandler.HandleCameraRotation(delta, look.x, look.y);

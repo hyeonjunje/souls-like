@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class WorldUIController : MonoBehaviour
 {
@@ -13,10 +14,14 @@ public class WorldUIController : MonoBehaviour
             instance = this;
     }
 
-
+    [Header("Boss UI")]
     public GameObject bossUI;
     public Image bossHpBar;
     public Text bossName;
+
+    [Header("World Name")]
+    public Text worldNameText;
+
 
     private Boss _currentBoss = null;
 
@@ -40,5 +45,22 @@ public class WorldUIController : MonoBehaviour
 
             _currentBoss = null;
         }
+    }
+
+
+    public void EnterOtherWorld(string worldName)
+    {
+        Sequence seq = DOTween.Sequence().OnPlay(() =>
+        {
+            WorldSoundManager.instance.PlaySoundEffect(SE.EnterTheNewWorld);
+            worldNameText.gameObject.SetActive(true);
+            worldNameText.text = worldName;
+        }).Append(worldNameText.DOFade(1, 1).From(0))
+        .AppendInterval(1f)
+        .Append(worldNameText.DOFade(0, 1))
+        .OnComplete(() =>
+        {
+            worldNameText.gameObject.SetActive(false);
+        });
     }
 }

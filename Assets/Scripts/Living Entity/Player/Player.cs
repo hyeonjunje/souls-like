@@ -118,6 +118,7 @@ public class Player : LivingEntity
 
     // animation Hash
     private int _hashIsRevive = Animator.StringToHash("isRevive");
+    private int _hashSit = Animator.StringToHash("Sit");
 
     protected override void Start()
     {
@@ -239,6 +240,21 @@ public class Player : LivingEntity
         }
 
         recoveryParticleSystem.Play();
+    }
+
+    public void SitChair(Transform sitTransform)
+    {
+        _pc.isControllable = false;
+
+        _pc.WalkAnimation(3);
+
+        Sequence seq = DOTween.Sequence().Append(transform.DOMove(sitTransform.position, 2))
+            .Join(transform.DORotate(sitTransform.eulerAngles, 2))
+            .OnComplete(() => 
+            {
+                _animator.SetTrigger(_hashSit);
+                TimelineController.instance.ShowEndingTimeline();
+            });
     }
 
     private float invincibilityTimer = 0.0f;

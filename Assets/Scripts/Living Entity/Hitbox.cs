@@ -5,11 +5,12 @@ using UnityEngine;
 public class Hitbox : MonoBehaviour
 {
     public float defaultDamage;
-
+    public AudioClip ac;
     public float currentDamage { get; set; }
 
     // connect
     private Collider _bc;
+    private AudioSource audioSource;
 
     private List<LivingEntity> charactersDamagedDuringThisCalculation = new List<LivingEntity>();
 
@@ -18,7 +19,7 @@ public class Hitbox : MonoBehaviour
     private void Start()
     {
         _bc = GetComponent<Collider>();
-
+        audioSource = GetComponent<AudioSource>();
         if (GetComponentInParent<Player>() == null)
         {
             targetLayer = 1 << LayerMask.NameToLayer("Player");
@@ -49,7 +50,11 @@ public class Hitbox : MonoBehaviour
         if (gameObject.tag == "Projectile" && other.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
             if(other.gameObject.layer == LayerMask.NameToLayer("Ground"))
+            {
+                if (audioSource != null && ac != null)
+                    audioSource.PlayOneShot(ac);
                 Destroy(gameObject);
+            }
             else
                 if (charactersDamagedDuringThisCalculation.Count > 0)
                     charactersDamagedDuringThisCalculation.Clear();
@@ -84,6 +89,12 @@ public class Hitbox : MonoBehaviour
                 }
 
                 character.Hitted(currentDamage);
+                if (gameObject.tag == "Projectile")
+                {
+                    if (audioSource != null && ac != null)
+                        audioSource.PlayOneShot(ac);
+                    Destroy(gameObject);
+                }
             }
         }
     }

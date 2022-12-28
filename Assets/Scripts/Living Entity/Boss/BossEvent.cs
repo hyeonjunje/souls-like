@@ -9,6 +9,8 @@ public class BossEvent : MonoBehaviour
     public BossWall enterance, exit;
     public Bonfire bonfire;
 
+    public Chair chair;
+
     public Action StartBossFightAction;
     public Action EndBossFightAction;
 
@@ -26,6 +28,9 @@ public class BossEvent : MonoBehaviour
 
         if(bonfire != null)
             bonfire.isActive = false;
+
+        if (chair != null)
+            chair.isActive = false;
     }
 
 
@@ -41,6 +46,9 @@ public class BossEvent : MonoBehaviour
     {
         if(bonfire != null)
             bonfire.ActiveBonfire();
+
+        if (chair != null)
+            chair.ActiveChair();
 
         if (enterance != null)
             enterance.gameObject.SetActive(false);

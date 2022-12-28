@@ -41,5 +41,7 @@ public class ChasingRocks : MonoBehaviour
     {
         if (_coChaseTarget != null)
             StopCoroutine(_coChaseTarget);
+
+
     }
 }

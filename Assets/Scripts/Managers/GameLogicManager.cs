@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
+using UnityEngine.Playables;
 
 public class GameLogicManager : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class GameLogicManager : MonoBehaviour
 
     [SerializeField] private Image gameOverPanel;
     [SerializeField] private Text youDied;
+
+    [SerializeField] private PlayableDirector playableDirector;
 
     private EnemySpawner _enemySpawner;
 
@@ -95,5 +98,11 @@ public class GameLogicManager : MonoBehaviour
 
         // 적 초기화
         _enemySpawner.SpawnEnemy();
+    }
+
+
+    public void ShowEnding()
+    {
+
     }
 }

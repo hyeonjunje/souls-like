@@ -6,7 +6,8 @@ public enum SE
 {
     ChestOpen,
     PickUpItem,
-    DoorOpen
+    DoorOpen,
+    EnterTheNewWorld,
 }
 
 public class WorldSoundManager : MonoBehaviour

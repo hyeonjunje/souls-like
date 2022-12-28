@@ -97,6 +97,8 @@ public class PlayerController : MonoBehaviour
     public bool isRoll => _isRoll;
     public bool isControllable = true;                                     // 보스방 입장같은 원격으로 transform을 조종할때는 조종 불가하게 하는 상태
 
+    public bool isEnding = false;
+
     // gravity
     private float gravityValue = -9.81f * 2;
     public float groundRadius = 0.25f;
@@ -329,6 +331,9 @@ public class PlayerController : MonoBehaviour
     private Coroutine _coRoll;
     public void Roll()
     {
+        if (!isControllable)
+            return;
+
         if (!this.enabled)
             return;
 
@@ -385,6 +390,9 @@ public class PlayerController : MonoBehaviour
 
     public void ChangeWeapon(int slot)
     {
+        if (!isControllable)
+            return;
+
         slot = slot - 1;
         if(_inventory.myWeapons.Count > slot && _inventory.myWeapons[slot] != null && weapon != _inventory.myWeapons[slot])
         {
@@ -408,6 +416,9 @@ public class PlayerController : MonoBehaviour
 
     public void ActLeftHand(bool isLeftHand)
     {
+        if (!isControllable)
+            return;
+
         if (_player.currentStamina < 0)
             return;
 
@@ -421,6 +432,16 @@ public class PlayerController : MonoBehaviour
 
     public void ActRightHand()
     {
+        if(isEnding)
+        {
+            // 로비창으로 돌아가기
+            Debug.Log("메인메뉴로 갑니다.");
+            isEnding = false;
+        }
+
+        if (!isControllable)
+            return;
+
         if (_player.currentStamina < 5.0f)
             return;
 
@@ -487,6 +508,11 @@ public class PlayerController : MonoBehaviour
     {
         _controller.Move(transform.forward * (3 * Time.deltaTime) + Vector3.up * _verticalVelocity * Time.deltaTime);
         _animator.SetFloat(_hashMove, 3);
+    }
+
+    public void WalkAnimation(float value)
+    {
+        _animator.SetFloat(_hashMove, value);
     }
     #endregion
 }

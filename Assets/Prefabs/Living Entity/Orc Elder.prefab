@@ -1335,7 +1335,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1567466376268289919}
   m_LocalRotation: {x: -0.4956056, y: 0.50435615, z: 0.4956056, w: 0.50435615}
-  m_LocalPosition: {x: -0.14109929, y: 0.015493721, z: 0}
+  m_LocalPosition: {x: -0.20119628, y: 0.0105225, z: -0.007884796}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5167931154857216697}
@@ -6047,6 +6047,7 @@ MonoBehaviour:
   attackAngle: 10
   attackCoolTime: 3
   hittedCoolTime: 0.5
+  detachRange: 0
   viewRaduis: 40
   viewAngle: 90
   rotationSpeed: 3
@@ -6109,14 +6110,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lockOnTransform: {fileID: 1567466376268289904}
+  hitParticleSystem: {fileID: 6802039000536099247, guid: aab634f6b1797e3468883bba6a80301a, type: 3}
   enemyType: 2
-  maxHp: 100
+  maxHp: 250
   recoveryHpCoolTime: 10
   recoveryHpAmount: 2
   hpBar: {fileID: 28402866396766035}
   hpCanvas: {fileID: 1878447720578314815}
   _ec: {fileID: 0}
-  op: 10
+  op: 25
   dp: 0
   magicPrefab: {fileID: 172324143396795659, guid: dd90774591863be46a56d65faa0f8b58, type: 3}
   magicSpeed: 10

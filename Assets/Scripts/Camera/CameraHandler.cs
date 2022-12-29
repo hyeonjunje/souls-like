@@ -34,6 +34,14 @@ public class CameraHandler : MonoBehaviour
     public float cameraCollisionOffset = 0.2f;
     public float minimumCollisionOffset = 0.2f;
 
+    public float cameraShakeDuration = 0.2f;
+    public float cameraShakeCount = 3;
+    public float cameraShakePower = 1f;
+
+    public float cameraHighlightPower = 1f;
+    public float cameraHighlightDuration = 0.2f;
+    private float cameraOriginFOV = 0f;
+
     public Transform currentLockOnTarget;
 
     public List<LivingEntity> availableTargets = new List<LivingEntity>();
@@ -250,6 +258,58 @@ public class CameraHandler : MonoBehaviour
         }
     }
 
+    private Coroutine _coShakeCamera = null;
+
+    public void ShakeCamera()
+    {
+        if (_coShakeCamera != null)
+            StopCoroutine(_coShakeCamera);
+        _coShakeCamera = StartCoroutine(CoShakeCamera());
+    }
+
+    IEnumerator CoShakeCamera()
+    {
+        Debug.Log("흔들림 코루틴");
+        cameraTransformPosition = new Vector3(0, 0, cameraTransform.localPosition.z);
+
+        for(int i = 0; i < cameraShakeCount; i++)
+        {
+            Vector3 randomShake = new Vector3(Random.Range(-cameraShakePower, cameraShakePower), Random.Range(-cameraShakePower, cameraShakePower), 0);
+
+            cameraTransformPosition += randomShake;
+            yield return new WaitForSeconds(cameraShakeDuration / cameraShakeCount);
+            cameraTransformPosition -= randomShake;
+        }
+
+        cameraTransformPosition = new Vector3(0, 0, cameraTransform.localPosition.z);
+    }
+
+    private Coroutine _coHighlightCamera = null;
+
+    public void HighlightCamera()
+    {
+        if (cameraOriginFOV == 0)
+            cameraOriginFOV = Camera.main.fieldOfView;
+
+        if (_coHighlightCamera != null)
+        {
+            StopCoroutine(_coHighlightCamera);
+        }
+        _coHighlightCamera = StartCoroutine(CoHighlightCamera());
+    }
+
+    IEnumerator CoHighlightCamera()
+    {
+        Camera.main.fieldOfView -= cameraHighlightPower;
+
+        Time.timeScale = 0;
+
+        yield return new WaitForSecondsRealtime(cameraHighlightDuration);
+
+        Time.timeScale = 1;
+
+        Camera.main.fieldOfView = cameraOriginFOV;
+    }
 
     public void ClearLockOnTargets()
     {

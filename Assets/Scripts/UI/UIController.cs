@@ -31,7 +31,7 @@ public class UIController : MonoBehaviour
     public GameObject settingUI;
     public GameObject keyExplanation;
     private bool isSettingUI = false;
-    private bool isKeyExplanation = false;
+    private bool isKeyExplanation = true;
 
     Sequence seq;
 

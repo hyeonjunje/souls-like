@@ -9,6 +9,7 @@ public abstract class EnemyController : MonoBehaviour
     public float attackAngle = 5f;
     public float attackCoolTime;
     public float hittedCoolTime;
+    public float detachRange;
 
     [Header("FOV")]
     public float viewRaduis;

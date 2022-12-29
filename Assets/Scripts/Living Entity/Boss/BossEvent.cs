@@ -57,6 +57,8 @@ public class BossEvent : MonoBehaviour
         if(exit != null)
             exit.gameObject.SetActive(false);
 
+
+        GameLogicManager.instance.isBossFight = false;
         WorldUIController.instance.EndFightBoss();
         WorldSoundManager.instance.ActiveBossBGM(false);
 

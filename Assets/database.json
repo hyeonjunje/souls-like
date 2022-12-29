@@ -1,31 +1,29 @@
 {
-    "clearCount": 0,
-    "deadCount": 0,
+    "hasSaveData": true,
+    "clearCount": 1,
+    "deadCount": 2,
     "lastPosition": {
-        "x": 22.00327491760254,
-        "y": -0.01985752582550049,
-        "z": -46.50837707519531
+        "x": 23.13332748413086,
+        "y": -0.019857466220855714,
+        "z": -45.83583450317383
     },
     "lastRotation": {
         "x": 0.0,
-        "y": 0.41520509123802187,
+        "y": 0.9736660718917847,
         "z": 0.0,
-        "w": 0.9097278118133545
+        "w": -0.22797897458076478
     },
+    "currentItem": [
+        {
+            "instanceID": 22412
+        },
+        {
+            "instanceID": 22404
+        }
+    ],
     "isClearBoss": [
         true,
         false,
         false
-    ],
-    "currentItem": [
-        {
-            "instanceID": 27936
-        },
-        {
-            "instanceID": 27930
-        },
-        {
-            "instanceID": 28014
-        }
     ]
 }

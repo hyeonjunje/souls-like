@@ -69,13 +69,28 @@ public class IdleState : AIState
                 Vector3 dirToTargetWithoutY = (targetPos - enemyPos).normalized;
 
                 Vector3 dirToTarget = (target.position - enemyTransform.position).normalized;
+
+                // 시야각에 있을 때
                 if (Vector3.Angle(enemyTransform.forward, dirToTargetWithoutY) < enemy.viewAngle / 2
                     && Vector3.Angle(enemyTransform.forward, dirToTargetWithoutY) > -enemy.viewAngle / 2)
                 {
                     float dstToTarget = Vector3.Distance(enemyTransform.position, target.position);
-                    if (!Physics.Raycast(enemyTransform.position, dirToTarget, dstToTarget, 1 << LayerMask.NameToLayer("Ground")))
+                    if (!Physics.Raycast(enemyTransform.position, dirToTarget, dstToTarget, (1 << LayerMask.NameToLayer("Ground")) | (1 << LayerMask.NameToLayer("Interactive"))))
                     {
                         enemy.currentTarget = target;
+                    }
+                }
+                // 시야각에 없을 때 (너무 가까우면 감지)
+                else
+                {
+                    float dstToTarget = Vector3.Distance(enemyTransform.position, target.position);
+
+                    if(dstToTarget < enemy.detachRange)
+                    {
+                        if (!Physics.Raycast(enemyTransform.position, dirToTarget, enemy.detachRange, (1 << LayerMask.NameToLayer("Ground")) | (1 << LayerMask.NameToLayer("Interactive"))))
+                        {
+                            enemy.currentTarget = target;
+                        }
                     }
                 }
             }

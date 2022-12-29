@@ -14,9 +14,9 @@ public class Orc : Enemy
         base.Dead();
     }
 
-    public override void Hitted(float damage)
+    public override void Hitted(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
-        base.Hitted(damage);
+        base.Hitted(damage, hitPoint, hitNormal);
     }
 
     #region animation event

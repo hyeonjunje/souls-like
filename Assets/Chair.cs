@@ -39,6 +39,7 @@ public class Chair : MonoBehaviour, IInteractable
             Player player = FindObjectOfType<Player>();
             player.SitChair(sitPos);
 
+            DataManager.instance.hasSaveData = true;
             DataManager.instance.clearCount++;
             DataManager.instance.lastPosition = Vector3.zero;
             DataManager.instance.lastRotation = Quaternion.identity;

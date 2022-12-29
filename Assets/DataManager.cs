@@ -7,12 +7,13 @@ using System.IO;
 [System.Serializable]
 public class SaveData
 {
+    public bool hasSaveData = false;
     public int clearCount = 0;
     public int deadCount = 0;
     public Vector3 lastPosition = Vector3.zero;
     public Quaternion lastRotation = Quaternion.identity;
-    public List<bool> isClearBoss = new List<bool>() { false, false, false };
     public List<ItemData> currentItem = new List<ItemData>();
+    public List<bool> isClearBoss = new List<bool>() { false, false, false };
 }
 
 [System.Serializable]
@@ -68,6 +69,7 @@ public class DataManager : MonoBehaviour
     public string path;
 
     [Header("플레이어 정보")]
+    public bool hasSaveData = false;
     public int clearCount = 0;
     public int deadCount = 0;
     public Vector3 lastPosition = Vector3.zero;
@@ -96,6 +98,7 @@ public class DataManager : MonoBehaviour
 
         if(!File.Exists(path))
         {
+            hasSaveData = false;
             clearCount = 0;
             lastPosition = Vector3.zero;
             lastRotation = Quaternion.identity;
@@ -109,6 +112,7 @@ public class DataManager : MonoBehaviour
 
             if(saveData != null)
             {
+                hasSaveData = saveData.hasSaveData;
                 clearCount = saveData.clearCount;
                 deadCount = saveData.deadCount;
                 lastPosition = saveData.lastPosition;
@@ -124,6 +128,7 @@ public class DataManager : MonoBehaviour
     {
         SaveData saveData = new SaveData();
 
+        saveData.hasSaveData = hasSaveData;
         saveData.clearCount = clearCount;
         saveData.deadCount = deadCount;
         saveData.lastPosition = lastPosition;

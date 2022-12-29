@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public abstract class LivingEntity : MonoBehaviour
 {
     public Transform lockOnTransform;
+
+    public ParticleSystem hitParticleSystem;
 
     protected Animator _animator;
     protected CharacterSoundManager _characterSoundManager;
@@ -19,10 +22,11 @@ public abstract class LivingEntity : MonoBehaviour
         _characterSoundManager = GetComponent<CharacterSoundManager>();
     }
 
-    public virtual void Hitted(float damage)
+    public virtual void Hitted(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
         _animator.SetTrigger(_hashIsHitted);
     }
+
 
     public virtual void Dead()
     {

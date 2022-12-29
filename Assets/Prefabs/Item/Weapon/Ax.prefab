@@ -180,9 +180,6 @@ MonoBehaviour:
   offsetPos: {x: 0, y: 0, z: 0}
   offsetRot: {x: 30, y: 180, z: 0}
   hitbox: {fileID: 5244368117865468187}
-  closeRangeSkillDatas: []
-  middleRangeSkillDatas: []
-  longRangeSKillDatas: []
   skillDatas:
   - {fileID: 11400000, guid: 84ce922b5e55c4d4a8b0d12b4bf52240, type: 2}
   - {fileID: 11400000, guid: 16130cded0cd388489475ef9f7eaaaaa, type: 2}
@@ -246,3 +243,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1f386d177efec4449ab57db78733547, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultDamage: 0
+  ac: {fileID: 0}
+  hitParticle: {fileID: 6802039000536099247, guid: aab634f6b1797e3468883bba6a80301a, type: 3}

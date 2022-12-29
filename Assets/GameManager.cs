@@ -86,5 +86,7 @@ public class GameManager : MonoBehaviour
         }
 
         player.GetComponent<PlayerController>().isControllable = true;
+        DataManager.instance.hasSaveData = true;
+        DataManager.instance.Save();
     }
 }

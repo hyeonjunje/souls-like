@@ -1152,7 +1152,6 @@ Transform:
   - {fileID: 8288831647851090213}
   - {fileID: 3503184373602723912}
   - {fileID: 3276655941578620841}
-  - {fileID: 2021955659416071039}
   m_Father: {fileID: 895622459588891766}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1393,7 +1392,7 @@ Transform:
   m_Children:
   - {fileID: 5654130424083035830}
   m_Father: {fileID: 8132716645769774312}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1740727691065713687
 GameObject:
@@ -1574,12 +1573,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2021955659416071024}
-  m_LocalRotation: {x: -0.4956056, y: 0.50435615, z: 0.4956056, w: 0.50435615}
-  m_LocalPosition: {x: -0.14109953, y: 0.015493721, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.2998511, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 5654130424083035830}
-  m_RootOrder: 3
+  m_Father: {fileID: 8132716645769774312}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2021955659635416336
 GameObject:
@@ -1729,9 +1728,6 @@ MonoBehaviour:
   offsetPos: {x: 0.03, y: 0.02, z: 0.028}
   offsetRot: {x: 0, y: 165, z: 0}
   hitbox: {fileID: 0}
-  closeRangeSkillDatas: []
-  middleRangeSkillDatas: []
-  longRangeSKillDatas: []
   skillDatas:
   - {fileID: 11400000, guid: cf934c0704092094aaf432fd9c76d935, type: 2}
 --- !u!1 &2060573924458510190
@@ -3641,7 +3637,7 @@ Transform:
   - {fileID: 4337438447139235933}
   - {fileID: 8374099587302580250}
   m_Father: {fileID: 8132716645769774312}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4951200687111092844
 GameObject:
@@ -5591,7 +5587,7 @@ Transform:
   - {fileID: 7145955203026246003}
   - {fileID: 7145955201406534979}
   m_Father: {fileID: 8132716645769774312}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7145955203026246000
 GameObject:
@@ -5754,9 +5750,6 @@ MonoBehaviour:
   offsetPos: {x: 0, y: 0, z: 0}
   offsetRot: {x: 0, y: 0, z: 0}
   hitbox: {fileID: 7305953681574400807}
-  closeRangeSkillDatas: []
-  middleRangeSkillDatas: []
-  longRangeSKillDatas: []
   skillDatas:
   - {fileID: 11400000, guid: 21948ee1e9045944abf7df0899483606, type: 2}
 --- !u!1 &7305953681321529420
@@ -5834,6 +5827,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDamage: 0
+  ac: {fileID: 0}
 --- !u!65 &7305953681574400806
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5956,6 +5950,7 @@ MonoBehaviour:
   attackAngle: 2
   attackCoolTime: 3
   hittedCoolTime: 0.5
+  detachRange: 5
   viewRaduis: 20
   viewAngle: 90
   rotationSpeed: 10
@@ -6052,6 +6047,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lockOnTransform: {fileID: 2021955659416071039}
+  hitParticleSystem: {fileID: 6802039000536099247, guid: aab634f6b1797e3468883bba6a80301a, type: 3}
   enemyType: 0
   maxHp: 40
   recoveryHpCoolTime: 10
@@ -6965,6 +6961,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 2021955659416071039}
   - {fileID: 895622459588891766}
   - {fileID: 4851316573342458839}
   - {fileID: 7145955202900629598}

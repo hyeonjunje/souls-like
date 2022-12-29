@@ -54,7 +54,7 @@ public class ChaseState : AIState
             return this;
         }
 
-        if (Physics.Raycast(enemyTransform.position, dir, Vector3.Distance(enemyTransform.position, enemy.currentTarget.position), 1 << LayerMask.NameToLayer("Ground")))
+        if (Physics.Raycast(enemyTransform.position, dir, Vector3.Distance(enemyTransform.position, enemy.currentTarget.position), (1 << LayerMask.NameToLayer("Ground")) | (1 << LayerMask.NameToLayer("Interactive"))))
         {
             if (!enemy._agent.enabled)
                 enemy._agent.enabled = true;

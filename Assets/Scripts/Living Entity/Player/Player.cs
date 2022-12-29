@@ -252,7 +252,7 @@ public class Player : LivingEntity
 
     public void SitChair(Transform sitTransform)
     {
-        _pc.isControllable = false;
+        _pc.isTimeline = true;
 
         _pc.WalkAnimation(3);
 
@@ -269,7 +269,7 @@ public class Player : LivingEntity
     private bool isInvincibility = false;
 
     #region override
-    public override void Hitted(float damage)
+    public override void Hitted(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
         if(isInvincibility)
         {
@@ -313,11 +313,19 @@ public class Player : LivingEntity
 
         _characterSoundManager.PlayRandomHitSound();
 
+        // 카메라 흔들림
+        CameraHandler.instance.ShakeCamera();
+
+        ParticleSystem particleObject = Instantiate(hitParticleSystem);
+        particleObject.transform.position = hitPoint;
+        particleObject.transform.rotation = Quaternion.Euler(hitNormal);
+        Destroy(particleObject.gameObject, 5f);
+
         ChangeHp(-damage);
         if (isDead)
             return;
 
-        base.Hitted(damage);
+        base.Hitted(damage, hitPoint, hitNormal);
     }
 
 

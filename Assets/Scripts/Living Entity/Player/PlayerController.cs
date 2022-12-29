@@ -167,7 +167,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (!isControllable)
+        if (!isControllable || isTimeline)
             return;
 
         if (_player.isDead)
@@ -336,7 +336,7 @@ public class PlayerController : MonoBehaviour
     private Coroutine _coRoll;
     public void Roll()
     {
-        if (!isControllable)
+        if (!isControllable || isTimeline)
             return;
 
         if (!this.enabled)
@@ -395,7 +395,7 @@ public class PlayerController : MonoBehaviour
 
     public void ChangeWeapon(int slot)
     {
-        if (!isControllable)
+        if (!isControllable || isTimeline)
             return;
 
         slot = slot - 1;
@@ -421,7 +421,7 @@ public class PlayerController : MonoBehaviour
 
     public void ActLeftHand(bool isLeftHand)
     {
-        if (!isControllable)
+        if (!isControllable || isTimeline)
             return;
 
         if (_player.currentStamina < 0)

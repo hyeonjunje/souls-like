@@ -19,6 +19,8 @@ public class WorldUIController : MonoBehaviour
     public Image bossHpBar;
     public Text bossName;
 
+    private Image currentBossHpBar;
+
     [Header("World Name")]
     public Text worldNameText;
 
@@ -30,6 +32,7 @@ public class WorldUIController : MonoBehaviour
         _currentBoss = boss;
 
         bossUI.SetActive(true);
+        currentBossHpBar = boss.enemy.hpBar;
         boss.enemy.hpBar = bossHpBar;
         boss.enemy.SetHp(boss.enemy.maxHp);
         bossName.text = boss.bossName;
@@ -41,7 +44,7 @@ public class WorldUIController : MonoBehaviour
 
         if(_currentBoss != null)
         {
-            _currentBoss.enemy.hpBar = null;
+            _currentBoss.enemy.hpBar = currentBossHpBar;
 
             _currentBoss = null;
         }

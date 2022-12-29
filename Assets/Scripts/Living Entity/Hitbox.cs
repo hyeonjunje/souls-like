@@ -6,6 +6,7 @@ public class Hitbox : MonoBehaviour
 {
     public float defaultDamage;
     public AudioClip ac;
+
     public float currentDamage { get; set; }
 
     // connect
@@ -47,18 +48,11 @@ public class Hitbox : MonoBehaviour
         if (gameObject.tag == "Ignore")
             return;
 
-        if (gameObject.tag == "Projectile" && other.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        if (gameObject.tag == "Projectile" && (other.gameObject.layer == LayerMask.NameToLayer("Ground") || other.gameObject.layer == LayerMask.NameToLayer("Interactive")))
         {
-            if(other.gameObject.layer == LayerMask.NameToLayer("Ground"))
-            {
-                if (audioSource != null && ac != null)
-                    audioSource.PlayOneShot(ac);
-                Destroy(gameObject);
-            }
-            else
-                if (charactersDamagedDuringThisCalculation.Count > 0)
-                    charactersDamagedDuringThisCalculation.Clear();
-
+            if (audioSource != null && ac != null)
+                audioSource.PlayOneShot(ac);
+            Destroy(gameObject);
         }
 
         if(gameObject.tag == "Particle")
@@ -70,7 +64,6 @@ public class Hitbox : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("Hitable"))
         {
             LivingEntity character = other.GetComponentInParent<LivingEntity>();
-            Debug.Log("아야");
             if (character != null)
             {
                 if (charactersDamagedDuringThisCalculation.Contains(character))
@@ -84,11 +77,20 @@ public class Hitbox : MonoBehaviour
                 // 같은 레이어(적 끼리는 피해 안 받게 설정)
                 if(targetLayer != 1 << character.gameObject.layer)
                 {
-                    Debug.Log("같은 적 때리기 안됨");
                     return;
                 }
 
-                character.Hitted(currentDamage);
+
+                RaycastHit hit;
+                if(Physics.Raycast(transform.position, (other.transform.position - transform.position).normalized, out hit, 1 << LayerMask.NameToLayer("Hitable")))
+                {
+                    character.Hitted(currentDamage, hit.point, hit.normal);
+                }
+                else
+                {
+                    character.Hitted(currentDamage, Vector3.zero, Vector3.zero);
+                }
+
                 if (gameObject.tag == "Projectile")
                 {
                     if (audioSource != null && ac != null)

@@ -4353,6 +4353,7 @@ MonoBehaviour:
   attackAngle: 5
   attackCoolTime: 3
   hittedCoolTime: 0.5
+  detachRange: 0
   viewRaduis: 40
   viewAngle: 90
   rotationSpeed: 3
@@ -4415,6 +4416,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lockOnTransform: {fileID: 3874808344864041237}
+  hitParticleSystem: {fileID: 6802039000536099247, guid: aab634f6b1797e3468883bba6a80301a, type: 3}
   enemyType: 2
   maxHp: 200
   recoveryHpCoolTime: 10
@@ -4422,7 +4424,7 @@ MonoBehaviour:
   hpBar: {fileID: 2333497599672099126}
   hpCanvas: {fileID: 4185886716260142170}
   _ec: {fileID: 0}
-  op: 10
+  op: 20
   dp: 0
   projectileSpeed: 18
   projectile: {fileID: 172324143396795659, guid: dd90774591863be46a56d65faa0f8b58, type: 3}
@@ -4698,6 +4700,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultDamage: 0
+  ac: {fileID: 0}
 --- !u!65 &5524384535899394380
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4763,9 +4766,6 @@ MonoBehaviour:
   offsetPos: {x: 0, y: 0, z: 0}
   offsetRot: {x: 0, y: 0, z: 0}
   hitbox: {fileID: 5524384535899394381}
-  closeRangeSkillDatas: []
-  middleRangeSkillDatas: []
-  longRangeSKillDatas: []
   skillDatas:
   - {fileID: 11400000, guid: 21948ee1e9045944abf7df0899483606, type: 2}
 --- !u!1 &5524384536823036239

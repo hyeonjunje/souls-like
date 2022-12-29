@@ -102,7 +102,7 @@ public class Enemy : LivingEntity
 
     #region override
     private Coroutine _coShowDamageText = null;
-    public override void Hitted(float damage)
+    public override void Hitted(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
         _characterSoundManager.PlayRandomHitSound();
 
@@ -112,6 +112,13 @@ public class Enemy : LivingEntity
 
         if (isDead)
             return;
+
+        ParticleSystem particleObject = Instantiate(hitParticleSystem);
+        particleObject.transform.position = hitPoint;
+        particleObject.transform.rotation = Quaternion.Euler(hitNormal);
+        Destroy(particleObject.gameObject, 5f);
+
+        CameraHandler.instance.HighlightCamera();
 
         ChangeHp(-damage);
 

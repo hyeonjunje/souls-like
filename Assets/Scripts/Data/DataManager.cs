@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Reflection;
 using System.IO;
+using System;
 
 [System.Serializable]
 public class SaveData
@@ -61,7 +63,8 @@ public class DataManager : MonoBehaviour
 
         SetEnemyData();
 
-        path = Path.Combine(Application.dataPath, "database.json");
+        path = Application.persistentDataPath + "/database.json";
+        //path = Path.Combine(Application.persistentDataPath, "database.json");
         Load();
     }
 
@@ -146,9 +149,20 @@ public class DataManager : MonoBehaviour
     {
         SaveData saveData = new SaveData();
 
-        string json = JsonUtility.ToJson(saveData, true);
+        try
+        {
+            string json = JsonUtility.ToJson(saveData, true);
 
-        File.WriteAllText(path, json);
+            File.WriteAllText(path, json);
+        }
+        catch(Exception ex)
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit(); // 어플리케이션 종료
+#endif
+        }
 
         Load();
     }

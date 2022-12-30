@@ -8,7 +8,7 @@ public class CSVReader
 {
     public static void CSVRead(string fileName, Action<List<string>> callback)
     {
-        StreamReader sr = new StreamReader(Application.dataPath + "/" + fileName);
+        StreamReader sr = new StreamReader(Application.streamingAssetsPath + "/" + fileName);
 
         if(sr == null)
         {
